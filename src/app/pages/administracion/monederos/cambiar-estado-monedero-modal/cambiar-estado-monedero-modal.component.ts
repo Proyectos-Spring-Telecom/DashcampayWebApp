@@ -60,7 +60,7 @@ export class CambiarEstadoMonederoModalComponent implements OnInit {
         this.loading = false;
       },
       error: (error) => {
-        console.error('Error al obtener tipos de pasajero:', error);
+        console.error('Error al obtener tipos de pasajero:');
         this.listaTiposPasajero = [];
         this.loading = false;
       }

@@ -31,7 +31,15 @@ export class TransaccionesService {
   }
 
   agregarRecarga(data: any) {
-    return this.http.post(environment.API_SECURITY + '/transacciones/recarga', data);
+    const claveIdempotencia =
+      data?.claveIdempotencia ||
+      (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
+        ? crypto.randomUUID()
+        : `${Date.now()}-${Math.random().toString(16).slice(2)}`);
+    return this.http.post(environment.API_SECURITY + '/transacciones/recarga', {
+      ...data,
+      claveIdempotencia
+    });
   }
 
   

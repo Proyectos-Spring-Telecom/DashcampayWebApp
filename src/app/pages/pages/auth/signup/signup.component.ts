@@ -24,6 +24,10 @@ import { User } from 'src/app/entities/User';
 import { fadeInRight400ms } from '@vex/animations/fade-in-right.animation';
 import { AlertsService } from '../../modal/alerts.service';
 import { UsuariosService } from 'src/app/pages/services/usuarios.service';
+import {
+  getPasswordGuideText,
+  getPasswordRuleKey,
+} from 'src/app/core/validators/password-policy';
 
 @Component({
   selector: 'vex-signup',
@@ -53,15 +57,9 @@ export class SignupComponent implements OnInit, OnDestroy {
   public textLogin: string = 'Confirmar';
   type: 'text' | 'password' = 'password';
   resetToken: string | null = null;
-  hasMayus = false;
-  hasMinus = false;
-  hasNumber = false;
-  espCaracter = false;
-  minCaracteres = false;
-  maxCaracteres = false;
   pwAllOk = false;
-  pwGuideText = 'La contraseña debe tener al menos una mayúscula.';
-  pwGuideKey = 'needUpper';
+  pwGuideText = 'La contraseña debe tener al menos 12 caracteres.';
+  pwGuideKey = 'needLength';
   matchText = 'Las contraseñas no coinciden';
   matchKey = 'noMatch';
 
@@ -90,8 +88,9 @@ export class SignupComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.resetToken =
-      sessionStorage.getItem('reset_token') || this.route.snapshot.queryParamMap.get('token');
+    this.resetToken = this.route.snapshot.queryParamMap.get('token');
+    sessionStorage.removeItem('reset_token');
+    sessionStorage.removeItem('token');
 
     this.signupForm = this.fb.group({
       userName: ['', [Validators.required, Validators.email]],
@@ -101,41 +100,10 @@ export class SignupComponent implements OnInit, OnDestroy {
     
     this.subs.push(
       this.signupForm.get('password')!.valueChanges.subscribe((val: string) => {
-        const v = val || '';
-        this.hasMayus = /[A-Z]/.test(v);
-        this.hasMinus = /[a-z]/.test(v);
-        this.hasNumber = /\d/.test(v);
-        this.espCaracter = /[^A-Za-z0-9]/.test(v);
-        this.minCaracteres = v.length > 6;
-        this.maxCaracteres = v.length < 16;
-
-        if (!this.hasMayus) {
-          this.pwGuideText = 'La contraseña debe tener al menos una mayúscula.';
-          this.pwGuideKey = 'needUpper';
-        } else if (!this.hasMinus) {
-          this.pwGuideText = 'La contraseña debe tener al menos una minúscula.';
-          this.pwGuideKey = 'needLower';
-        } else if (!this.hasNumber) {
-          this.pwGuideText = 'La contraseña debe tener al menos un número.';
-          this.pwGuideKey = 'needNumber';
-        } else if (!this.espCaracter) {
-          this.pwGuideText = 'La contraseña debe tener al menos un carácter no alfanumérico (ej. #?!&).';
-          this.pwGuideKey = 'needSpecial';
-        } else if (!(this.minCaracteres && this.maxCaracteres)) {
-          this.pwGuideText = 'La contraseña debe tener al menos más de 6 y menos de 16 caracteres.';
-          this.pwGuideKey = 'needLength';
-        } else {
-          this.pwGuideText = 'Contraseña válida.';
-          this.pwGuideKey = 'ok';
-        }
-
-        this.pwAllOk =
-          this.hasMayus &&
-          this.hasMinus &&
-          this.hasNumber &&
-          this.espCaracter &&
-          this.minCaracteres &&
-          this.maxCaracteres;
+        const ruleKey = getPasswordRuleKey(val || '');
+        this.pwGuideKey = ruleKey;
+        this.pwGuideText = getPasswordGuideText(ruleKey);
+        this.pwAllOk = ruleKey === 'ok';
         this.updateMatchHint();
       })
     );

@@ -126,7 +126,7 @@ export class RegistrarTipoPasajeroComponent implements OnInit {
         this.actualizarValidadoresCantidad();
       },
       error: (err) => {
-        console.error('Error al obtener tipos de descuento:', err);
+        console.error('Error al obtener tipos de descuento:');
         this.loadingDependientes = false;
       }
     });
@@ -146,7 +146,7 @@ export class RegistrarTipoPasajeroComponent implements OnInit {
         }
       },
       error: (err) => {
-        console.error('Error al obtener clientes:', err);
+        console.error('Error al obtener clientes:');
         this.loadingDependientes = false;
       }
     });
@@ -193,7 +193,7 @@ export class RegistrarTipoPasajeroComponent implements OnInit {
         this.loading = false;
       },
       error: (err) => {
-        console.error('Error al obtener tipo de pasajero:', err);
+        console.error('Error al obtener tipo de pasajero:');
         this.loading = false;
         this.alerts.open({
           type: 'error',

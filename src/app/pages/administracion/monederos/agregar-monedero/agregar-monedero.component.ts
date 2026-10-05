@@ -233,7 +233,7 @@ export class AgregarMonederoComponent implements OnInit {
   initForm() {
     this.monederoForm = this.fb.group({
       numeroSerie: ['', Validators.required],
-      saldo: [null, Validators.required],
+      saldo: [{ value: 0, disabled: true }],
       estatus: [1, Validators.required],
       idPasajero: [null],
       idCliente: [null, Validators.required],
@@ -261,7 +261,6 @@ export class AgregarMonederoComponent implements OnInit {
 
       const etiquetas: any = {
         numeroSerie: 'Número de Serie',
-        saldo: 'Saldo',
         estatus: 'Estatus',
         idCliente: 'Cliente',
       };
@@ -300,22 +299,7 @@ export class AgregarMonederoComponent implements OnInit {
 
     const raw = this.monederoForm.getRawValue();
     const payload: any = { ...raw };
-
-    const s = String(raw.saldo ?? '').replace(',', '.').replace(/[^0-9.]/g, '');
-    const n = parseFloat(s);
-    if (!Number.isFinite(n)) {
-      this.submitButton = 'Guardar';
-      this.loading = false;
-      await this.alerts.open({
-        type: 'error',
-        title: '¡Ops!',
-        message: 'Saldo inválido. Verifica el campo Saldo.',
-        confirmText: 'Entendido',
-        backdropClose: false,
-      });
-      return;
-    }
-    payload.saldo = Number(n.toFixed(2));
+    delete payload.saldo;
 
     this.monederoForm.removeControl('id');
 
@@ -394,11 +378,11 @@ export class AgregarMonederoComponent implements OnInit {
     const raw = this.monederoForm.getRawValue();
     const payload: any = {
       numeroSerie: raw.numeroSerie,
-      idCliente: Number(raw.idCliente),
-      idPasajero: raw.idPasajero != null ? Number(raw.idPasajero) : null,
-      idTipoPasajero: raw.idTipoPasajero != null ? Number(raw.idTipoPasajero) : null,
       estatus: Number(raw.estatus || 1),
     };
+    if (raw.idPasajero != null && raw.idPasajero !== '') {
+      payload.idPasajero = Number(raw.idPasajero);
+    }
 
     this.moneService.actualizarMonedero(this.idMonedero!, payload).subscribe(
       () => {

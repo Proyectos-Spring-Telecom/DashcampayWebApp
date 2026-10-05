@@ -188,7 +188,7 @@ export class ListaTurnosComponent implements OnInit {
           };
         } catch (err) {
           this.loading = false;
-          console.error('Error en la solicitud de datos:', err);
+          console.error('Error en la solicitud de datos:');
           return { data: [], totalCount: 0 };
         }
       },

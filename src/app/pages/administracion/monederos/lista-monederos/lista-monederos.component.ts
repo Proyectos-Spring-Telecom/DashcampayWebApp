@@ -17,6 +17,7 @@ import { DxDataGridComponent } from 'devextreme-angular';
 import { AlertsService } from 'src/app/pages/pages/modal/alerts.service';
 import { MonederosServices } from 'src/app/pages/services/monederos.service';
 import { TransaccionesService } from 'src/app/pages/services/transacciones.service';
+import { AuthenticationService } from 'src/app/core/services/auth.service';
 import { Router } from '@angular/router';
 import CustomStore from 'devextreme/data/custom_store';
 import { lastValueFrom } from 'rxjs';
@@ -71,6 +72,7 @@ export class ListaMonederosComponent implements OnInit {
     private dialog: MatDialog,
     private moneService: MonederosServices,
     private transaccionService: TransaccionesService,
+    private auth: AuthenticationService,
     private alerts: AlertsService,
     private fb: FormBuilder,
     private route: Router
@@ -126,7 +128,7 @@ export class ListaMonederosComponent implements OnInit {
           };
         } catch (err) {
           this.loading = false;
-          console.error('Error en la solicitud de datos:', err);
+          console.error('Error en la solicitud de datos:');
           return { data: [], totalCount: 0 };
         }
       }
@@ -372,7 +374,21 @@ export class ListaMonederosComponent implements OnInit {
     }
   }
 
+  private rolActual(): number {
+    const user = this.auth.getUser() || {};
+    return Number(user?.idRol ?? user?.rol?.id ?? user?.rol ?? 0);
+  }
+
   confirmarOperacion() {
+    if (this.tipoOperacion === 'recarga' && this.rolActual() === 9) {
+      this.alerts.open({
+        type: 'warning',
+        title: 'Sin permiso',
+        message: 'Tu rol no puede recargar en efectivo.',
+        confirmText: 'Entendido'
+      });
+      return;
+    }
     const form =
       this.tipoOperacion === 'recarga' ? this.recargaForm : this.debitoForm;
     const opNombre = this.tipoOperacion === 'recarga' ? 'Recarga' : 'Débito';

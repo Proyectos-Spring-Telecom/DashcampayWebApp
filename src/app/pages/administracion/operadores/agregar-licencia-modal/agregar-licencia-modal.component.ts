@@ -85,7 +85,7 @@ export class AgregarLicenciaModalComponent implements OnInit {
         }));
       },
       error: (error) => {
-        console.error('Error al obtener tipos de licencia:', error);
+        console.error('Error al obtener tipos de licencia:');
         this.listaTiposLicencia = [];
       }
     });
@@ -100,7 +100,7 @@ export class AgregarLicenciaModalComponent implements OnInit {
         }));
       },
       error: (error) => {
-        console.error('Error al obtener categorías de licencia:', error);
+        console.error('Error al obtener categorías de licencia:');
         this.listaCategoriasLicencia = [];
       }
     });

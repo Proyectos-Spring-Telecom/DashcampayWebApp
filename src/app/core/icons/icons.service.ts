@@ -18,6 +18,7 @@ export class IconsService {
         name: string,
         namespace: string
       ): SafeResourceUrl | SafeResourceUrlWithIconOptions | null => {
+        if (!/^[a-zA-Z0-9_-]{1,80}$/.test(name)) return null;
         switch (namespace) {
           case 'mat':
             return this.domSanitizer.bypassSecurityTrustResourceUrl(

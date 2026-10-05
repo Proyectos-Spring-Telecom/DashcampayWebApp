@@ -80,7 +80,7 @@ export class ListaDispositivosComponent {
       key: 'id',
       load: async (loadOptions: any) => {
         const skip = Number(loadOptions?.skip) || 0;
-        const take = Number(loadOptions?.take) || this.pageSize;
+        const take = Math.min(Number(loadOptions?.take) || this.pageSize, 100);
         const page = Math.floor(skip / take) + 1;
 
         try {
@@ -117,7 +117,7 @@ export class ListaDispositivosComponent {
 
         } catch (error) {
           this.loading = false;
-          console.error('Error en la solicitud de datos:', error);
+          console.error('Error en la solicitud de datos:');
           return { data: [], totalCount: 0 };
         }
       }

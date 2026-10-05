@@ -4,6 +4,8 @@ import { MAT_DIALOG_DATA, MatDialogModule, MatDialogRef } from '@angular/materia
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
+import { allowedDocumentUrl } from 'src/app/core/security/safe-document-url';
+import { S3SignedUrlService } from 'src/app/core/security/s3-signed-url.service';
 
 export interface VerLicenciaData {
   url: string;
@@ -30,21 +32,33 @@ export class VerLicenciaModalComponent implements OnInit {
   constructor(
     private dialogRef: MatDialogRef<VerLicenciaModalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: VerLicenciaData,
-    private sanitizer: DomSanitizer
-  ) {
-    if (this.data.url) {
-      this.esImagen = this.isImageUrl(this.data.url);
-      if (this.esImagen) {
-        this.urlImgSanitizada = this.sanitizer.bypassSecurityTrustUrl(this.data.url);
-        this.urlSanitizada = undefined;
-      } else {
-        this.urlSanitizada = this.sanitizer.bypassSecurityTrustResourceUrl(this.data.url);
-        this.urlImgSanitizada = undefined;
-      }
-    }
-  }
+    private sanitizer: DomSanitizer,
+    private s3: S3SignedUrlService,
+  ) {}
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    const candidata = allowedDocumentUrl(this.data.url);
+    this.data.url = '';
+    if (!candidata) return;
+    this.s3.firmar(candidata).subscribe({
+      next: (firmada) => {
+        const ok = allowedDocumentUrl(firmada);
+        if (!ok) return;
+        this.data.url = ok;
+        this.esImagen = this.isImageUrl(ok);
+        if (this.esImagen) {
+          this.urlImgSanitizada = this.sanitizer.bypassSecurityTrustUrl(ok);
+          this.urlSanitizada = undefined;
+        } else {
+          this.urlSanitizada = this.sanitizer.bypassSecurityTrustResourceUrl(ok);
+          this.urlImgSanitizada = undefined;
+        }
+      },
+      error: () => {
+        this.data.url = '';
+      },
+    });
+  }
 
   abrirNuevaPestana() {
     if (this.data.url) {
@@ -101,7 +115,7 @@ export class VerLicenciaModalComponent implements OnInit {
       document.body.removeChild(link);
       window.URL.revokeObjectURL(url);
     } catch (error) {
-      console.error('Error al descargar:', error);
+      console.error('Error al descargar:');
       // Fallback: intentar abrir en nueva pestaña si falla la descarga
       window.open(this.data.url, '_blank', 'noopener');
     }

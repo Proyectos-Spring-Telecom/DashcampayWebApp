@@ -41,7 +41,6 @@ export class NetpayService {
     customerId: string;
     token: string;
     preAuth: boolean;
-    cvv2: string;
     nombre: string;
     apellidoPaterno: string;
     apellidoMaterno: string;

@@ -433,13 +433,13 @@ export class GenerarTransaccionComponent implements OnInit {
         // Asegurar que el token esté completamente procesado antes de crear el cliente
         setTimeout(() => {
           // Solo crear el cliente si es necesario, NO procesar el pago (charge)
-          this.crearClienteSiEsNecesario(result.token, result.deviceFingerPrint, result.deviceInformation, result.cvv, result.clienteInfo, result.referenceId);
+          this.crearClienteSiEsNecesario(result.token, result.deviceFingerPrint, result.deviceInformation, result.clienteInfo, result.referenceId);
         }, 100); // Pequeño delay para asegurar que todo esté procesado
       }
     });
   }
 
-  private crearClienteSiEsNecesario(token: string, deviceFingerPrint: string, deviceInformation: any, cvv?: string, clienteInfo?: any, referenceId?: string) {
+  private crearClienteSiEsNecesario(token: string, deviceFingerPrint: string, deviceInformation: any, clienteInfo?: any, referenceId?: string) {
     // Validar que el token esté completamente listo antes de proceder
     if (!token || token.trim() === '') {
       this.alerts.open({
@@ -460,7 +460,7 @@ export class GenerarTransaccionComponent implements OnInit {
 
     // Si customerId es null, crear el cliente (solo después de que el token esté listo)
     if (customerId === null || customerId === undefined) {
-      this.crearClienteNetpay(token, monedero, clienteInfo, cvv, referenceId).subscribe(
+      this.crearClienteNetpay(token, monedero, clienteInfo, referenceId).subscribe(
         (response: any) => {
           // Obtener el customerId de la respuesta
           const nuevoCustomerId = response?.customerId || response?.data?.customerId || response?.id;
@@ -530,7 +530,7 @@ export class GenerarTransaccionComponent implements OnInit {
       );
     } else {
       // Si ya tiene customerId, actualizar el token del cliente
-      this.actualizarTokenCliente(customerId, token, cvv, clienteInfo, referenceId).subscribe(
+      this.actualizarTokenCliente(customerId, token, clienteInfo, referenceId).subscribe(
         (response: any) => {
           this.cargando = false;
           
@@ -580,7 +580,7 @@ export class GenerarTransaccionComponent implements OnInit {
     }
   }
 
-  private actualizarTokenCliente(customerId: string, token: string, cvv?: string, clienteInfo?: any, referenceId?: string) {
+  private actualizarTokenCliente(customerId: string, token: string, clienteInfo?: any, referenceId?: string) {
     let tokenData: any;
     
     if (clienteInfo) {
@@ -589,7 +589,6 @@ export class GenerarTransaccionComponent implements OnInit {
         customerId: String(customerId),
         token: token,
         preAuth: false,
-        cvv2: cvv || '',
         nombre: clienteInfo.nombre,
         apellidoPaterno: clienteInfo.apellidoPaterno,
         apellidoMaterno: clienteInfo.apellidoMaterno,
@@ -613,7 +612,6 @@ export class GenerarTransaccionComponent implements OnInit {
         customerId: String(customerId),
         token: token,
         preAuth: false,
-        cvv2: cvv || '',
         // Campos adicionales con valores por defecto si no hay clienteInfo
         nombre: '',
         apellidoPaterno: '',
@@ -635,7 +633,7 @@ export class GenerarTransaccionComponent implements OnInit {
     return this.netpayService.actualizarTokenCliente(customerId, tokenData);
   }
 
-  private crearClienteNetpay(token: string, monedero: any, clienteInfo?: any, cvv?: string, referenceId?: string) {
+  private crearClienteNetpay(token: string, monedero: any, clienteInfo?: any, referenceId?: string) {
     // Si clienteInfo está disponible, usar esa información; de lo contrario, usar los datos del monedero
     let customerData: any;
     
@@ -644,7 +642,6 @@ export class GenerarTransaccionComponent implements OnInit {
       customerData = {
         token: token,
         preAuth: false,
-        cvv2: cvv || '',
         nombre: clienteInfo.nombre,
         apellidoPaterno: clienteInfo.apellidoPaterno,
         apellidoMaterno: clienteInfo.apellidoMaterno,

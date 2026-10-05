@@ -87,7 +87,7 @@ export class RecaudacionOperadorComponent implements OnInit {
         this.listaClientes = Array.isArray(response?.data) ? response.data : (Array.isArray(response) ? response : []);
       },
       error: (error) => {
-        console.error('Error al cargar clientes:', error);
+        console.error('Error al cargar clientes:');
       }
     });
 
@@ -104,7 +104,7 @@ export class RecaudacionOperadorComponent implements OnInit {
         this.listaOperadores = Array.isArray(response?.data) ? response.data : (Array.isArray(response) ? response : []);
       },
       error: (error) => {
-        console.error('Error al cargar operadores por cliente:', error);
+        console.error('Error al cargar operadores por cliente:');
         this.listaOperadores = [];
       }
     });
@@ -168,11 +168,11 @@ export class RecaudacionOperadorComponent implements OnInit {
       },
       error: (error: any) => {
         this.loadingVisible = false;
-        console.error('Error al cargar reporte:', error);
+        console.error('Error al cargar reporte:');
         this.alerts.open({
           type: 'error',
           title: 'Error',
-          message: 'No se pudo cargar el reporte. Por favor, intente nuevamente.',
+          message: error?.error?.message || 'No se pudo cargar el reporte. Por favor, intente nuevamente.',
           confirmText: 'Aceptar',
           backdropClose: false
         });

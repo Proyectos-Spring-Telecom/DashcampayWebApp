@@ -60,8 +60,8 @@ export class AltaUsuarioComponent {
 
   get currentRuleKey(): 'case' | 'special' | 'number' | 'length' | 'ok' {
     const key = getPasswordRuleKey(this.pwdValue);
-    if (key === 'needUpper') return 'case';
-    if (key === 'needSpecial') return 'special';
+    if (key === 'needLetter') return 'case';
+    if (key === 'needSymbol') return 'special';
     if (key === 'needNumber') return 'number';
     if (key === 'needLength') return 'length';
     return 'ok';
@@ -612,9 +612,22 @@ export class AltaUsuarioComponent {
     const payload: any = {
       ...rest,
       idRol: Number(idRol),
-      idCliente: Number(idCliente),
       permisosIds: (permisosIds || []).map((x: any) => Number(x)),
     };
+
+    if (this.inputContrasena && passwordHash) {
+      this.submitButton = 'Actualizar';
+      this.loading = false;
+      await this.alerts.open({
+        type: 'warning',
+        title: 'La contraseña no se cambia aquí',
+        message: 'El resto de los datos sí se puede guardar. La contraseña se cambia desde el perfil, con la contraseña actual.',
+        confirmText: 'Entendido',
+        backdropClose: false,
+      });
+      this.loading = true;
+      this.submitButton = 'Cargando...';
+    }
 
     if (!payload.permisosIds || payload.permisosIds.length === 0) {
       this.submitButton = 'Actualizar';
@@ -633,10 +646,6 @@ export class AltaUsuarioComponent {
         backdropClose: false,
       });
       return;
-    }
-
-    if (this.inputContrasena && passwordHash) {
-      payload.passwordHash = passwordHash;
     }
 
     this.usuaService.actualizarUsuario(this.idUsuario, payload).subscribe({
@@ -835,7 +844,7 @@ export class AltaUsuarioComponent {
         }
       },
       error: (err: any) => {
-        console.error('[UPLOAD][fotoPerfil]', err);
+        console.error('[UPLOAD][fotoPerfil]');
         // ⬇⬇⬇ fallback seguro
         this.usuarioForm.patchValue({ fotoPerfil: this.DEFAULT_FOTO_URL });
         this.fotoPreviewUrl = null;

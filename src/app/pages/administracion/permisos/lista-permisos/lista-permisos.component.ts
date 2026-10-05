@@ -29,7 +29,7 @@ export class ListaPermisosComponent implements OnInit {
 
   public paginaActual: number = 1;
   public totalRegistros: number = 0;
-  public pageSize: number = 150;
+  public pageSize: number = 100;
   public totalPaginas: number = 0;
   public data!: string;
   public paginaActualData: any[] = [];
@@ -62,7 +62,7 @@ export class ListaPermisosComponent implements OnInit {
     this.listaPermisos = new CustomStore({
       key: 'id',
       load: async (loadOptions: any) => {
-        const take = Number(loadOptions?.take) || this.pageSize || 10;
+        const take = Math.min(Number(loadOptions?.take) || this.pageSize || 10, 100);
         const skip = Number(loadOptions?.skip) || 0;
         const page = Math.floor(skip / take) + 1;
 
@@ -102,7 +102,7 @@ export class ListaPermisosComponent implements OnInit {
           };
         } catch (error) {
           this.loading = false;
-          console.error('Error en la solicitud de datos:', error);
+          console.error('Error en la solicitud de datos:');
           return { data: [], totalCount: 0 };
         }
       }

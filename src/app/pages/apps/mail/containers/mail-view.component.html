@@ -91,7 +91,7 @@
       </div>
     </div>
 
-    <div [innerHTML]="mail?.body" class="py-4 prose"></div>
+    <div class="py-4 prose">{{ mail?.body }}</div>
 
     <div class="border-b">
       <div *ngIf="(mail?.attachments?.length ?? 0) > 0" class="py-4 flex">

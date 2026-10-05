@@ -6,6 +6,7 @@ import { AuthenticationService } from 'src/app/core/services/auth.service';
 import { AlertsService } from 'src/app/pages/pages/modal/alerts.service';
 import { ClientesService } from 'src/app/pages/services/clientes.service';
 import { ZonasService } from 'src/app/pages/services/zonas.service';
+import { googleMapsScriptUrl } from 'src/app/core/security/load-google-maps';
 import {
   bloquearCaracteresEspecialesNombre,
   NOMBRE_SIN_ESPECIALES_REGEX,
@@ -106,7 +107,7 @@ export class AgregarZonaComponent implements OnInit, AfterViewInit, OnDestroy {
           'No se pudo cargar Google Maps',
           (err as Error)?.message || 'Error desconocido'
         );
-        console.error('Google Maps no cargó:', err);
+        console.error('Google Maps no cargó:');
       });
   }
 
@@ -173,7 +174,7 @@ export class AgregarZonaComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       },
       error: (err) => {
-        console.error('Error al obtener zona:', err);
+        console.error('Error al obtener zona:');
       },
     });
   }
@@ -519,7 +520,12 @@ export class AgregarZonaComponent implements OnInit, AfterViewInit, OnDestroy {
     return new Promise<void>((resolve, reject) => {
       const script = document.createElement('script');
       script.setAttribute('data-gmaps', 'js');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBpLS8xONczrVarb5aZz-mXj1hBMLxhQpU&v=weekly&libraries=marker`;
+      const src = googleMapsScriptUrl('marker');
+      if (!src) {
+        reject(new Error('No se pudo cargar Google Maps'));
+        return;
+      }
+      script.src = src;
       script.async = true;
       script.defer = true;
       script.onload = () => resolve();
@@ -807,20 +813,23 @@ export class AgregarZonaComponent implements OnInit, AfterViewInit, OnDestroy {
   private showMapsErrorOverlay(title: string, detail: string) {
     const el = this.getMapElement();
     if (!el) return;
-
-    el.innerHTML = `
-      <div style="
-          width:100%;height:100%;
-          display:flex;align-items:center;justify-content:center;
-          background:#e9ecef;border-radius:8px;">
-        <div style="text-align:center; max-width: 520px; padding: 16px;">
-          <div style="font-size:42px; line-height:1;">⚠️</div>
-          <div style="font-weight:600; margin-top:8px; color:#333;">${title}</div>
-          <div style="font-size:13px; margin-top:6px; color:#555;">
-            ${detail}
-          </div>
-        </div>
-      </div>
-    `;
+    el.replaceChildren();
+    const wrap = document.createElement('div');
+    wrap.style.cssText =
+      'width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#e9ecef;border-radius:8px;';
+    const inner = document.createElement('div');
+    inner.style.cssText = 'text-align:center;max-width:520px;padding:16px;';
+    const icon = document.createElement('div');
+    icon.style.cssText = 'font-size:42px;line-height:1;';
+    icon.textContent = '⚠️';
+    const titleEl = document.createElement('div');
+    titleEl.style.cssText = 'font-weight:600;margin-top:8px;color:#333;';
+    titleEl.textContent = title ?? '';
+    const detailEl = document.createElement('div');
+    detailEl.style.cssText = 'font-size:13px;margin-top:6px;color:#555;';
+    detailEl.textContent = detail ?? '';
+    inner.append(icon, titleEl, detailEl);
+    wrap.appendChild(inner);
+    el.appendChild(wrap);
   }
 }

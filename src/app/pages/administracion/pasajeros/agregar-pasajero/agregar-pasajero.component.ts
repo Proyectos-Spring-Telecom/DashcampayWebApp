@@ -65,7 +65,7 @@ export class AgregarPasajeroComponent implements OnInit {
         })).filter((t: any) => Number.isFinite(t.id) && t.id > 0);
       },
       error: (error) => {
-        console.error('Error al obtener tipos de pasajero:', error);
+        console.error('Error al obtener tipos de pasajero:');
         this.listaTiposPasajero = [];
       }
     });

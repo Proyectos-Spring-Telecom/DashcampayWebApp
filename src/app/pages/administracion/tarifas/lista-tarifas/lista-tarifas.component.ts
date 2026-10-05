@@ -92,7 +92,7 @@ export class ListaTarifasComponent implements OnInit {
           };
         } catch (error) {
           this.loading = false;
-          console.error('Error en la solicitud de datos:', error);
+          console.error('Error en la solicitud de datos:');
           return { data: [], totalCount: 0 };
         }
       }

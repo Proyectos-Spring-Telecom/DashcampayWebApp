@@ -310,7 +310,7 @@ export class AgregarOperadorComponent implements OnInit {
         }));
       },
       error: (error: unknown) => {
-        console.error('Error al obtener categorías de licencia:', error);
+        console.error('Error al obtener categorías de licencia:');
       }
     });
   }
@@ -324,7 +324,7 @@ export class AgregarOperadorComponent implements OnInit {
         }));
       },
       error: (error: unknown) => {
-        console.error('Error al obtener tipos de licencia:', error);
+        console.error('Error al obtener tipos de licencia:');
         this.listaTiposLicencia = [];
       }
     });
@@ -798,7 +798,7 @@ export class AgregarOperadorComponent implements OnInit {
           this.operadorForm.patchValue({ identificacion: url });
         }
       },
-      error: (err: any) => console.error('[UPLOAD][identificacion]', err),
+      error: (err: any) => console.error('[UPLOAD][identificacion]'),
     });
   }
 
@@ -859,7 +859,7 @@ export class AgregarOperadorComponent implements OnInit {
           this.operadorForm.patchValue({ comprobanteDomicilio: url });
         }
       },
-      error: (err: any) => console.error('[UPLOAD][comprobanteDomicilio]', err),
+      error: (err: any) => console.error('[UPLOAD][comprobanteDomicilio]'),
     });
   }
 
@@ -919,7 +919,7 @@ export class AgregarOperadorComponent implements OnInit {
           this.operadorForm.patchValue({ antecedentesNoPenales: url });
         }
       },
-      error: (err: any) => console.error('[UPLOAD][antecedentesNoPenales]', err),
+      error: (err: any) => console.error('[UPLOAD][antecedentesNoPenales]'),
     });
   }
 
@@ -989,7 +989,7 @@ export class AgregarOperadorComponent implements OnInit {
           this.licPreviewUrl = url;
         }
       },
-      error: (err: any) => console.error('[UPLOAD][licencia]', err),
+      error: (err: any) => console.error('[UPLOAD][licencia]'),
     });
   }
 
@@ -1057,7 +1057,7 @@ export class AgregarOperadorComponent implements OnInit {
           this.fotoPreviewUrl = url;
         }
       },
-      error: (err: any) => console.error('[UPLOAD][foto]', err),
+      error: (err: any) => console.error('[UPLOAD][foto]'),
     });
   }
 
@@ -1117,7 +1117,7 @@ export class AgregarOperadorComponent implements OnInit {
           this.operadorForm.patchValue({ certificadoMedico: url });
         }
       },
-      error: (err: any) => console.error('[UPLOAD][certificadoMedico]', err),
+      error: (err: any) => console.error('[UPLOAD][certificadoMedico]'),
     });
   }
 }

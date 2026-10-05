@@ -205,7 +205,7 @@ export class AuthenticationService {
     );
   }
 
-  reenviarCodigo(payload: { codigo: string }): Observable<string> {
+  reenviarCodigo(payload: { codigo: string; userName: string }): Observable<string> {
     return this.http.patch<string>(
       `${environment.API_SECURITY}/login/verify`,
       payload,

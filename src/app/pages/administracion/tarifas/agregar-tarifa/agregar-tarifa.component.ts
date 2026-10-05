@@ -131,7 +131,7 @@ export class AgregarTarifaComponent implements OnInit {
         this.actualizarCamposSegunTipo(idTipoTarifa);
       },
       error: (e) => {
-        console.error('Error obtenerTarifa', e);
+        console.error('Error obtenerTarifa');
       }
     });
   }

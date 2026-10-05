@@ -40,12 +40,11 @@
 
                             <div class="col-12 col-md-6 col-lg-3" *ngIf="!idMonedero">
                                 <label class="form-label">
-                                    <i class="fa fa-wallet"></i><span>Saldo</span>
+                                    <i class="fa fa-wallet"></i><span>Saldo inicial</span>
                                 </label>
                                 <mat-form-field appearance="fill" class="w-100">
-                                    <input matInput placeholder="Saldo" formControlName="saldo" inputmode="decimal"
-                                        (keydown)="moneyKeydown($event)" (input)="moneyInput($event)"
-                                        (paste)="moneyPaste($event)" (blur)="moneyBlur($event)" />
+                                    <input matInput placeholder="0.00" formControlName="saldo" readonly />
+                                    <mat-hint>Siempre $0. Recarga después del alta.</mat-hint>
                                 </mat-form-field>
                             </div>
 

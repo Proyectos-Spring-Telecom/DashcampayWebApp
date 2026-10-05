@@ -716,7 +716,7 @@ export class AltaClienteComponent {
           }
         },
         error: (err: any) => {
-          console.error('[UPLOAD][logotipo]', err);
+          console.error('[UPLOAD][logotipo]');
           // Opcional: limpiar en error
           // this.clearLogoFile(new Event('clear'));
         }
@@ -782,7 +782,7 @@ export class AltaClienteComponent {
           }
         },
         error: (err: any) => {
-          console.error('[UPLOAD][constanciaSituacionFiscal]', err);
+          console.error('[UPLOAD][constanciaSituacionFiscal]');
         }
       });
   }
@@ -846,7 +846,7 @@ export class AltaClienteComponent {
           }
         },
         error: (err: any) => {
-          console.error('[UPLOAD][comprobanteDomicilio]', err);
+          console.error('[UPLOAD][comprobanteDomicilio]');
         }
       });
   }
@@ -917,7 +917,7 @@ export class AltaClienteComponent {
           }
         },
         error: (err: any) => {
-          console.error('[UPLOAD][actaConstitutiva]', err);
+          console.error('[UPLOAD][actaConstitutiva]');
         }
       });
   }

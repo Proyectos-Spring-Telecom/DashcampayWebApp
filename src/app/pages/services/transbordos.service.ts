@@ -23,7 +23,8 @@ export class TransbordosService {
   }
 
   actualizarTransbordo(id: number, data: any): Observable<any> {
-    return this.http.patch(`${environment.API_SECURITY}/transbordos/${id}`, data);
+    const { idCliente: _idCliente, ...body } = data || {};
+    return this.http.patch(`${environment.API_SECURITY}/transbordos/${id}`, body);
   }
 
   eliminarTransbordo(id: number): Observable<any> {

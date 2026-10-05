@@ -113,10 +113,9 @@
                 <div class="mt-0" *ngIf="showPwdHints">
                   <ng-container [ngSwitch]="currentRuleKey">
                     <p *ngSwitchCase="'case'" class="pwd-hint text-danger" [@fadeIn]><i
-                        class="fa fa-exclamation-circle"></i><span class="ms-2">Al menos una mayúscula.</span></p>
+                        class="fa fa-exclamation-circle"></i><span class="ms-2">Al menos una letra.</span></p>
                     <p *ngSwitchCase="'special'" class="pwd-hint text-danger" [@fadeIn]><i
-                        class="fa fa-exclamation-circle"></i><span class="ms-2">Un caracter no alfanumérico (ejemplo:
-                        #?!&).</span></p>
+                        class="fa fa-exclamation-circle"></i><span class="ms-2">Un símbolo de estos: @ $ ! % * ? & .</span></p>
                     <p *ngSwitchCase="'number'" class="pwd-hint text-danger" [@fadeIn]><i
                         class="fa fa-exclamation-circle"></i><span class="ms-2">Un número.</span></p>
                     <p *ngSwitchCase="'length'" class="pwd-hint text-danger" [@fadeIn]><i

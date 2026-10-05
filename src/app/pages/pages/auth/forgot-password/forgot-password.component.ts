@@ -113,10 +113,11 @@ export class ForgotPasswordComponent implements OnInit {
 
     this.loading = true;
     this.user.solicitarCambioContrasena(this.resetForm.value).subscribe({
-      next: async (token: string) => {
+      next: async () => {
         this.loading = false;
         this.textLogin = 'Confirmar';
-        sessionStorage.setItem('reset_token', token);
+        sessionStorage.removeItem('reset_token');
+        sessionStorage.removeItem('token');
         this.alerts.open({
           type: 'success',
           title: '¡Operación Exitosa!',

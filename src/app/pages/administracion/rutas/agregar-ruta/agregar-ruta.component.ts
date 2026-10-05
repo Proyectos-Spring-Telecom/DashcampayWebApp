@@ -5,6 +5,7 @@ import { fadeInRight400ms } from '@vex/animations/fade-in-right.animation';
 import { AlertsService } from 'src/app/pages/pages/modal/alerts.service';
 import { RutasService } from 'src/app/pages/services/ruta.service';
 import { ZonasService } from 'src/app/pages/services/zonas.service';
+import { googleMapsScriptUrl } from 'src/app/core/security/load-google-maps';
 
 declare const google: any;
 
@@ -67,7 +68,7 @@ export class AgregarRutaComponent implements OnInit, OnDestroy {
       estatus: [1, Validators.required],
     });
     this.obtenerRegiones();
-    this.loadGoogleMaps().then(() => this.initMap()).catch(err => console.error('Error cargando Google Maps:', err));
+    this.loadGoogleMaps().then(() => this.initMap()).catch(err => console.error('Error cargando Google Maps:'));
     
     // Suscribirse a cambios en idRegion: cliente + geocerca en mapa
     this.rutaForm.get('idRegion')?.valueChanges.subscribe((idRegion) => {
@@ -117,7 +118,7 @@ export class AgregarRutaComponent implements OnInit, OnDestroy {
             await google.maps.importLibrary('geometry');
           }
         } catch (e) {
-          console.warn('[AgregarRuta] Librería geometry de Maps:', e);
+          console.warn('[AgregarRuta] Librería geometry de Maps:');
         }
         resolve();
       };
@@ -148,8 +149,12 @@ export class AgregarRutaComponent implements OnInit, OnDestroy {
       script.id = 'gmaps-sdk';
       script.async = true;
       script.defer = true;
-      script.src =
-        'https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&v=quarterly&libraries=places,geometry';
+      const src = googleMapsScriptUrl('places,geometry');
+      if (!src) {
+        reject(new Error('No se pudo cargar Google Maps'));
+        return;
+      }
+      script.src = src;
       script.onload = () => void finish();
       script.onerror = (e) => reject(e);
       document.head.appendChild(script);
@@ -432,7 +437,7 @@ export class AgregarRutaComponent implements OnInit, OnDestroy {
         }
       },
       error: (err) => {
-        console.error('[AgregarRuta] Error al obtener zona para geocerca:', err);
+        console.error('[AgregarRuta] Error al obtener zona para geocerca:');
       },
     });
   }

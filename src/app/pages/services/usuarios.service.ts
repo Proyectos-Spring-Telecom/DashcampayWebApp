@@ -35,7 +35,8 @@ export class UsuariosService {
   }
 
   actualizarUsuario(idUsuario: number, saveForm: any): Observable<any> {
-    return this.http.put(`${environment.API_SECURITY}/usuarios/` + idUsuario, saveForm);
+    const { idCliente: _idCliente, ...body } = saveForm || {};
+    return this.http.put(`${environment.API_SECURITY}/usuarios/` + idUsuario, body);
   }
 
   uploadFile(data: FormData): Observable<any> {
@@ -75,7 +76,7 @@ export class UsuariosService {
       data,
       {
         headers,
-        responseType: 'text' as const   // <- igual que el otro: texto plano
+        responseType: 'text' as const
       }
     );
   }

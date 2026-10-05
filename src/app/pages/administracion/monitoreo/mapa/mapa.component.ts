@@ -145,7 +145,7 @@ export class MapaComponent implements OnInit, AfterViewInit, OnDestroy {
         this.listaVariantes = Array.isArray(response?.data) ? response.data : (Array.isArray(response) ? response : []);
       },
       error: (error) => {
-        console.error('Error al cargar variantes:', error);
+        console.error('Error al cargar variantes:');
         this.listaVariantes = [];
       }
     });
@@ -160,7 +160,7 @@ export class MapaComponent implements OnInit, AfterViewInit, OnDestroy {
         this.listaRutas = Array.isArray(response?.data) ? response.data : (Array.isArray(response) ? response : []);
       },
       error: (error) => {
-        console.error('Error al cargar rutas:', error);
+        console.error('Error al cargar rutas:');
         this.listaRutas = [];
       }
     });
@@ -175,7 +175,7 @@ export class MapaComponent implements OnInit, AfterViewInit, OnDestroy {
         this.listaZonas = Array.isArray(response?.data) ? response.data : (Array.isArray(response) ? response : []);
       },
       error: (error) => {
-        console.error('Error al cargar zonas:', error);
+        console.error('Error al cargar zonas:');
         this.listaZonas = [];
       }
     });
@@ -194,7 +194,7 @@ export class MapaComponent implements OnInit, AfterViewInit, OnDestroy {
         }));
       },
       error: (error) => {
-        console.error('Error al cargar talleres:', error);
+        console.error('Error al cargar talleres:');
         this.listaTalleres = [];
       }
     });
@@ -262,8 +262,7 @@ export class MapaComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     // Validar que las coordenadas sean números válidos
-    if (isNaN(lat) || isNaN(lng)) {
-      console.warn('[MapaComponent] Coordenadas inválidas en actualización:', { lat, lng, update });
+    if (!this.coordenadaEnMapa(lat, lng)) {
       return;
     }
 
@@ -297,7 +296,7 @@ export class MapaComponent implements OnInit, AfterViewInit, OnDestroy {
           const fecha = new Date(update.fechaHora);
           unidad.ultimoPing = fecha.toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
         } catch (e) {
-          console.error('[MapaComponent] Error al formatear fecha:', e);
+          console.error('[MapaComponent] Error al formatear fecha:');
         }
       }
 
@@ -395,6 +394,13 @@ export class MapaComponent implements OnInit, AfterViewInit, OnDestroy {
     }
   }
 
+  private coordenadaEnMapa(lat: number, lng: number): boolean {
+    if (!Number.isFinite(lat) || !Number.isFinite(lng)) return false;
+    if (Math.abs(lat) > 90 || Math.abs(lng) > 180) return false;
+    if (Math.abs(lat) < 0.0001 && Math.abs(lng) < 0.0001) return false;
+    return true;
+  }
+
   obtenerMonitoreo(): void {
     this.loadingUnidades = true;
     this.http.get(`${environment.API_SECURITY}/monitoreo`).subscribe({
@@ -404,9 +410,10 @@ export class MapaComponent implements OnInit, AfterViewInit, OnDestroy {
         const datos = Array.isArray(result?.data) ? result.data : (Array.isArray(result) ? result : []);
         
         this.unidades = datos.map((item: any) => {
-          // Extraer coordenadas
-          const lat = item.posicion.latitud || item.posicion.lat || item.posicion.latitudInicial || item.posicion.latitudFinal || 19.432608;
-          const lng = item.posicion.longitud || item.posicion.lng || item.posicion.longitudInicial || item.posicion.longitudFinal || -99.133209;
+          const pos = item.posicion || {};
+          const lat = Number(pos.latitud ?? pos.lat ?? item.latitud);
+          const lng = Number(pos.longitud ?? pos.lng ?? item.longitud);
+          if (!this.coordenadaEnMapa(lat, lng)) return null;
           
           // Mapear estado
           let estado: 'ruta' | 'pausa' | 'desvio' = 'ruta';
@@ -458,7 +465,7 @@ export class MapaComponent implements OnInit, AfterViewInit, OnDestroy {
             diferencia: item.diferencia !== undefined ? Number(item.diferencia) : undefined,
             numeroSerieValidador: item.numeroSerieValidador || item.numeroSerie || item.validador?.numeroSerie || item.validador?.numeroSerieValidador || undefined
           };
-        });
+        }).filter((unidad: any) => unidad != null);
         
         this.loadingUnidades = false;
         
@@ -468,7 +475,7 @@ export class MapaComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       },
       error: (err: any) => {
-        console.error('Error al obtener /monitoreo:', err);
+        console.error('Error al obtener /monitoreo:');
         this.loadingUnidades = false;
       }
     });
@@ -497,7 +504,7 @@ export class MapaComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       },
       error: (err: any) => {
-        console.error('[MapaComponent] Error al ejecutar recorrido:', err);
+        console.error('[MapaComponent] Error al ejecutar recorrido:');
       }
     });
   }
@@ -662,7 +669,7 @@ export class MapaComponent implements OnInit, AfterViewInit, OnDestroy {
       await this.waitForGoogleMaps();
       this.initMap();
     } catch (e) {
-      console.error('Google Maps no cargó', e);
+      console.error('Google Maps no cargó');
     }
   }
 
@@ -985,7 +992,7 @@ private addMarker(u: UnidadMapa): void {
         this.dibujarRutaEnMapa(inicio, fin, recorrido);
       },
       error: (error) => {
-        console.error('[MapaComponent] Error al obtener variante:', error);
+        console.error('[MapaComponent] Error al obtener variante:');
       }
     });
   }
@@ -1056,7 +1063,7 @@ private addMarker(u: UnidadMapa): void {
         this.dibujarRutaEnMapa(inicio, fin, []);
       },
       error: (error) => {
-        console.error('[MapaComponent] Error al obtener ruta:', error);
+        console.error('[MapaComponent] Error al obtener ruta:');
       }
     });
   }
@@ -1308,7 +1315,7 @@ private addMarker(u: UnidadMapa): void {
         this.dibujarZonaEnMapa(path);
       },
       error: (error) => {
-        console.error('[MapaComponent] Error al obtener zona:', error);
+        console.error('[MapaComponent] Error al obtener zona:');
       }
     });
   }

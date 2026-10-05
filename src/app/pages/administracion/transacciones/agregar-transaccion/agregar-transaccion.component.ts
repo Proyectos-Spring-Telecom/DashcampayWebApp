@@ -5,6 +5,7 @@ import { AlertsService } from 'src/app/pages/pages/modal/alerts.service';
 import { DispositivosService } from 'src/app/pages/services/dispositivos.service';
 import { MonederosServices } from 'src/app/pages/services/monederos.service';
 import { TransaccionesService } from 'src/app/pages/services/transacciones.service';
+import { googleMapsScriptUrl } from 'src/app/core/security/load-google-maps';
 
 @Component({
   selector: 'vex-agregar-transaccion',
@@ -218,7 +219,7 @@ export class AgregarTransaccionComponent implements OnInit {
     return Number.isFinite(n) ? Number(n.toFixed(6)) : null;
   }
 
-  private loadGoogleMaps(apiKey: string): Promise<void> {
+  private loadGoogleMaps(_apiKey: string): Promise<void> {
     const w = window as any;
     if (w.google && w.google.maps) return Promise.resolve();
 
@@ -230,7 +231,12 @@ export class AgregarTransaccionComponent implements OnInit {
       }
       const script = document.createElement('script');
       script.id = scriptId;
-      script.src = `https://maps.googleapis.com/maps/api/js?key=${apiKey}`;
+      const src = googleMapsScriptUrl('marker');
+      if (!src) {
+        reject(new Error('No se pudo cargar Google Maps'));
+        return;
+      }
+      script.src = src;
       script.async = true;
       script.defer = true;
       script.onload = () => resolve();

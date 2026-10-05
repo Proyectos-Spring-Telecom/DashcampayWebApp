@@ -293,7 +293,7 @@ export class PerfilPasajeroComponent implements OnInit {
           return { data: dataTransformada, totalCount: totalRegistros };
         } catch (error) {
           this.loadingTx = false;
-          console.error('[TRANSACCIONES] Error:', error);
+          console.error('[TRANSACCIONES] Error:');
           return { data: [], totalCount: 0 };
         }
       }
@@ -351,7 +351,7 @@ export class PerfilPasajeroComponent implements OnInit {
           return { data: pageData, totalCount: totalRegistros };
         } catch (err) {
           this.loadingMone = false;
-          console.error('[MONEDEROS] Error:', err);
+          console.error('[MONEDEROS] Error:');
           return { data: [], totalCount: 0 };
         }
       }

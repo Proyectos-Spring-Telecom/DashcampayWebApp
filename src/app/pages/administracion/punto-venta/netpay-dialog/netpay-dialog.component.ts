@@ -782,8 +782,6 @@ export class NetpayDialogComponent implements OnInit, OnDestroy {
       },
       (error: any) => {
         this.cargandoColonias = false;
-        console.error('Error al obtener colonias:', error);
-        console.error('URL del API:', `https://dashcampay.com/apidev/direcciones/CP/${codigoPostal}`);
         this.coloniasDisponibles = [];
         // Quitar la validación requerida si hay error
         this.cardForm.get('colonia')?.clearValidators();
@@ -919,9 +917,6 @@ export class NetpayDialogComponent implements OnInit, OnDestroy {
             return;
           }
 
-          // Obtener el CVV del formulario
-          const cvv = cardInfo.cvv2;
-
           // Obtener la información del cliente del formulario
           const clienteInfo: any = {
             nombre: this.cardForm.get('nombre')?.value,
@@ -959,7 +954,6 @@ export class NetpayDialogComponent implements OnInit, OnDestroy {
             deviceFingerPrint: this.deviceFingerPrint,
             deviceInformation: deviceInformation,
             referenceId: referenceId,
-            cvv: cvv,
             clienteInfo: clienteInfo
           });
         } catch {

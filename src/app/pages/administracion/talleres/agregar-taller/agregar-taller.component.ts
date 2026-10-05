@@ -11,6 +11,7 @@ import {
   NOMBRE_SIN_ESPECIALES_REGEX,
   onPasteNombreSinEspeciales
 } from 'src/app/core/validators/nombre-sin-especiales';
+import { googleMapsScriptUrl } from 'src/app/core/security/load-google-maps';
 
 declare const google: any;
 
@@ -102,7 +103,7 @@ export class AgregarTallerComponent implements OnInit, AfterViewInit, OnDestroy 
         }));
       },
       error: (error: unknown) => {
-        console.error('Error al obtener clientes:', error);
+        console.error('Error al obtener clientes:');
       }
     });
   }
@@ -155,7 +156,7 @@ export class AgregarTallerComponent implements OnInit, AfterViewInit, OnDestroy 
           confirmText: 'Confirmar',
           backdropClose: false
         });
-        console.error('Error:', error);
+        console.error('Error:');
         this.regresar();
       }
     });
@@ -180,7 +181,12 @@ export class AgregarTallerComponent implements OnInit, AfterViewInit, OnDestroy 
       }
       const script = document.createElement('script');
       script.id = scriptId;
-      script.src = 'https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places';
+      const src = googleMapsScriptUrl('places');
+      if (!src) {
+        reject(new Error('No se pudo cargar Google Maps'));
+        return;
+      }
+      script.src = src;
       script.async = true;
       script.defer = true;
       script.onload = () => {
@@ -403,7 +409,7 @@ export class AgregarTallerComponent implements OnInit, AfterViewInit, OnDestroy 
           confirmText: 'Confirmar',
           backdropClose: false
         });
-        console.error('Error:', error);
+        console.error('Error:');
       }
     });
   }

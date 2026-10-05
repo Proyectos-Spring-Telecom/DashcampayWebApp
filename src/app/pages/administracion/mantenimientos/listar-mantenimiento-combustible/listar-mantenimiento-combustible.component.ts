@@ -70,7 +70,7 @@ export class ListarMantenimientoCombustibleComponent implements OnInit {
           };
         } catch (err) {
           this.loading = false;
-          console.error('Error en la solicitud de datos:', err);
+          console.error('Error en la solicitud de datos:');
           return { data: [], totalCount: 0 };
         }
       }
@@ -179,7 +179,7 @@ export class ListarMantenimientoCombustibleComponent implements OnInit {
           confirmText: 'Confirmar',
           backdropClose: false
         });
-        console.error('Error:', error);
+        console.error('Error:');
       }
     });
   }
@@ -215,7 +215,7 @@ export class ListarMantenimientoCombustibleComponent implements OnInit {
           confirmText: 'Confirmar',
           backdropClose: false
         });
-        console.error('Error:', error);
+        console.error('Error:');
       }
     });
   }

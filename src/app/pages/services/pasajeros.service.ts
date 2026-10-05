@@ -61,20 +61,19 @@ export class PasajerosService {
     return this.http.post(`${environment.API_SECURITY}/login/pasajero/registro`, data);
   }
 
-  verificarPasajero(codigo: string): Observable<any> {
-    // Sin autenticación; sigue siendo PATCH y envía { codigo }
+  verificarPasajero(codigo: string, userName: string): Observable<any> {
     const context = new HttpContext().set(SKIP_APP_AUTH, true);
 
     return this.http.patch(
       `${environment.API_SECURITY}/login/verify`,
-      { codigo },
+      { codigo, userName },
       { responseType: 'text' as 'json', context }
     ).pipe(catchError(err => throwError(() => err)));
   }
 
 
-  verificarPorCodigo(codigo: string): Observable<string> {
-    return this.verificarPasajero(codigo) as unknown as Observable<string>;
+  verificarPorCodigo(codigo: string, userName: string): Observable<string> {
+    return this.verificarPasajero(codigo, userName) as unknown as Observable<string>;
   }
 
   datosUsuarioPasajero(): Observable<any> {

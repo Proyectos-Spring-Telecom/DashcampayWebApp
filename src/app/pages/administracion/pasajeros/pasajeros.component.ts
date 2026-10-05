@@ -110,7 +110,7 @@ export class PasajerosComponent implements OnInit {
         this.listaPasajeros = res.pasajeros.sort((a: any, b: any) => b.Id - a.Id);
       },
       (error) => {
-        console.error('Error al obtener pasajeros:', error);
+        console.error('Error al obtener pasajeros:');
         this.loading = false;
       }
     );

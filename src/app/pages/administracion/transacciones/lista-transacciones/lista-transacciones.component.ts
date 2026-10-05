@@ -7,6 +7,7 @@ import CustomStore from 'devextreme/data/custom_store';
 import { lastValueFrom } from 'rxjs';
 import { AlertsService } from 'src/app/pages/pages/modal/alerts.service';
 import { TransaccionesService } from 'src/app/pages/services/transacciones.service';
+import { mensajeRangoFechas } from 'src/app/core/utils/rango-fechas';
 
 @Component({
   selector: 'vex-lista-transacciones',
@@ -286,7 +287,7 @@ export class ListaTransaccionesComponent implements OnInit {
       load: async (loadOptions: any) => {
         this.loading = true;
 
-        const take = Number(loadOptions?.take) || this.pageSize || 10;
+        const take = Math.min(Number(loadOptions?.take) || this.pageSize || 10, 100);
         const skip = Number(loadOptions?.skip) || 0;
         const page = Math.floor(skip / take) + 1;
 
@@ -296,6 +297,18 @@ export class ListaTransaccionesComponent implements OnInit {
           fechaInicio: this.fechaInicioFiltro,
           fechaFin: this.fechaFinFiltro
         };
+        const rango = mensajeRangoFechas(this.fechaInicioFiltro, this.fechaFinFiltro);
+        if (rango) {
+          this.loading = false;
+          this.alerts.open({
+            type: 'warning',
+            title: 'Rango de fechas',
+            message: rango,
+            confirmText: 'Aceptar',
+            backdropClose: false,
+          });
+          return { data: [], totalCount: 0 };
+        }
 
         try {
           const resp: any = await lastValueFrom(
@@ -345,7 +358,7 @@ export class ListaTransaccionesComponent implements OnInit {
           };
         } catch (error) {
           this.loading = false;
-          console.error('[TRANSACCIONES] Error:', error);
+          console.error('[TRANSACCIONES] Error:');
           return { data: [], totalCount: 0 };
         }
       }

@@ -7,6 +7,7 @@ import CustomStore from 'devextreme/data/custom_store';
 import { lastValueFrom } from 'rxjs';
 import { AlertsService } from 'src/app/pages/pages/modal/alerts.service';
 import { ZonasService } from 'src/app/pages/services/zonas.service';
+import { googleMapsScriptUrl } from 'src/app/core/security/load-google-maps';
 
 declare const google: any;
 
@@ -203,7 +204,7 @@ export class ListaZonasComponent implements OnInit, AfterViewInit, OnDestroy {
           };
         } catch (err) {
           this.loading = false;
-          console.error('Error en la solicitud de datos:', err);
+          console.error('Error en la solicitud de datos:');
           return { data: [], totalCount: 0 };
         }
       }
@@ -282,7 +283,7 @@ export class ListaZonasComponent implements OnInit, AfterViewInit, OnDestroy {
         }
       },
       error: (err) => {
-        console.error('Error al obtener zona:', err);
+        console.error('Error al obtener zona:');
         setTimeout(() => this.initMapModal(), 100);
       }
     });
@@ -329,14 +330,21 @@ export class ListaZonasComponent implements OnInit, AfterViewInit, OnDestroy {
     if (!el) return;
 
     if (!(window as any).google?.maps?.Map) {
-      el.innerHTML = `
-        <div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#e9ecef;">
-          <div style="text-align:center;">
-            <div style="font-size:42px;">⚠️</div>
-            <div style="font-weight:600;margin-top:8px;color:#333;">Google Maps no ha cargado</div>
-          </div>
-        </div>
-      `;
+      el.replaceChildren();
+      const wrap = document.createElement('div');
+      wrap.style.cssText =
+        'width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#e9ecef;';
+      const inner = document.createElement('div');
+      inner.style.textAlign = 'center';
+      const icon = document.createElement('div');
+      icon.style.fontSize = '42px';
+      icon.textContent = '⚠️';
+      const title = document.createElement('div');
+      title.style.cssText = 'font-weight:600;margin-top:8px;color:#333;';
+      title.textContent = 'Google Maps no ha cargado';
+      inner.append(icon, title);
+      wrap.appendChild(inner);
+      el.appendChild(wrap);
       return;
     }
 
@@ -466,7 +474,12 @@ export class ListaZonasComponent implements OnInit, AfterViewInit, OnDestroy {
 
     return new Promise<void>((resolve, reject) => {
       const script = document.createElement('script');
-      script.src = `https://maps.googleapis.com/maps/api/js?key=AIzaSyBpLS8xONczrVarb5aZz-mXj1hBMLxhQpU&v=weekly`;
+      const src = googleMapsScriptUrl('marker');
+      if (!src) {
+        reject(new Error('No se pudo cargar Google Maps'));
+        return;
+      }
+      script.src = src;
       script.async = true;
       script.defer = true;
       script.onload = () => resolve();

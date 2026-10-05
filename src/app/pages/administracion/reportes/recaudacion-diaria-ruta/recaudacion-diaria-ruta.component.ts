@@ -132,7 +132,7 @@ export class RecaudacionDiariaRutaComponent implements OnInit {
         this.listaClientes = Array.isArray(response?.data) ? response.data : (Array.isArray(response) ? response : []);
       },
       error: (error) => {
-        console.error('Error al cargar clientes:', error);
+        console.error('Error al cargar clientes:');
       }
     });
 
@@ -155,7 +155,7 @@ export class RecaudacionDiariaRutaComponent implements OnInit {
         this.listaZonas = Array.isArray(response?.data) ? response.data : (Array.isArray(response) ? response : []);
       },
       error: (error) => {
-        console.error('Error al cargar zonas por cliente:', error);
+        console.error('Error al cargar zonas por cliente:');
         this.listaZonas = [];
       }
     });
@@ -170,7 +170,7 @@ export class RecaudacionDiariaRutaComponent implements OnInit {
         this.listaRutas = Array.isArray(response?.data) ? response.data : (Array.isArray(response) ? response : []);
       },
       error: (error) => {
-        console.error('Error al cargar rutas por zona:', error);
+        console.error('Error al cargar rutas por zona:');
         this.listaRutas = [];
       }
     });
@@ -185,7 +185,7 @@ export class RecaudacionDiariaRutaComponent implements OnInit {
         this.listaVariantes = Array.isArray(response?.data) ? response.data : (Array.isArray(response) ? response : []);
       },
       error: (error) => {
-        console.error('Error al cargar variantes por ruta:', error);
+        console.error('Error al cargar variantes por ruta:');
         this.listaVariantes = [];
       }
     });
@@ -254,11 +254,11 @@ export class RecaudacionDiariaRutaComponent implements OnInit {
       },
       error: (error: any) => {
         this.loadingVisible = false;
-        console.error('Error al cargar reporte:', error);
+        console.error('Error al cargar reporte:');
         this.alerts.open({
           type: 'error',
           title: 'Error',
-          message: 'No se pudo cargar el reporte. Por favor, intente nuevamente.',
+          message: error?.error?.message || 'No se pudo cargar el reporte. Por favor, intente nuevamente.',
           confirmText: 'Aceptar',
           backdropClose: false
         });

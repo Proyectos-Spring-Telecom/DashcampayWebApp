@@ -6,6 +6,7 @@ import { DxDataGridComponent } from 'devextreme-angular';
 import { lastValueFrom } from 'rxjs';
 import { AlertsService } from 'src/app/pages/pages/modal/alerts.service';
 import { BitacoraService } from 'src/app/pages/services/bitacora.service';
+import { mensajeRangoFechas } from 'src/app/core/utils/rango-fechas';
 import { ModulosService } from 'src/app/pages/services/modulos.service';
 import { UsuariosService } from 'src/app/pages/services/usuarios.service';
 import CustomStore from 'devextreme/data/custom_store';
@@ -116,6 +117,17 @@ customizeTooltip(info: any) {
 
     const fechaInicioStr = this.formatDate(fechaInicio);
     const fechaFinStr = this.formatDate(fechaFin);
+    const rango = mensajeRangoFechas(fechaInicioStr, fechaFinStr);
+    if (rango) {
+      this.alerts.open({
+        type: 'warning',
+        title: 'Rango de fechas',
+        message: rango,
+        confirmText: 'Aceptar',
+        backdropClose: false
+      });
+      return;
+    }
 
     this.bitacoraService.obtenerConteoPasajerosRangoAgrupado(fechaInicioStr, fechaFinStr).subscribe({
       next: (resp: any) => {
@@ -292,7 +304,7 @@ customizeTooltip(info: any) {
           };
         } catch (err) {
           this.loading = false;
-          console.error('Error en la solicitud de datos:', err);
+          console.error('Error en la solicitud de datos:');
           return { data: [], totalCount: 0 };
         }
       }

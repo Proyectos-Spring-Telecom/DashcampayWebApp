@@ -83,7 +83,7 @@ export class AgregarVehiculoComponent implements OnInit {
         }));
       },
       error: (error: unknown) => {
-        console.error('Error al obtener tipos de combustible:', error);
+        console.error('Error al obtener tipos de combustible:');
       }
     });
   }
@@ -106,7 +106,7 @@ export class AgregarVehiculoComponent implements OnInit {
       },
       error: (error: unknown) => {
         this.loading = false;
-        console.error('Error al obtener dispositivos:', error);
+        console.error('Error al obtener dispositivos:');
       }
     });
   }
@@ -130,7 +130,7 @@ export class AgregarVehiculoComponent implements OnInit {
       },
       error: (error: unknown) => {
         this.loading = false;
-        console.error('Error al obtener operadores:', error);
+        console.error('Error al obtener operadores:');
       }
     });
   }
@@ -623,7 +623,7 @@ export class AgregarVehiculoComponent implements OnInit {
             this.tcFileName = file.name;
           }
         },
-        error: (err) => console.error('[UPLOAD][tarjetaCirculacion]', err)
+        error: (err) => console.error('[UPLOAD][tarjetaCirculacion]')
       });
   }
 
@@ -686,7 +686,7 @@ export class AgregarVehiculoComponent implements OnInit {
             this.polizaFileName = file.name;
           }
         },
-        error: (err) => console.error('[UPLOAD][polizaSeguro]', err)
+        error: (err) => console.error('[UPLOAD][polizaSeguro]')
       });
   }
 
@@ -749,7 +749,7 @@ export class AgregarVehiculoComponent implements OnInit {
             this.permisoFileName = file.name;
           }
         },
-        error: (err) => console.error('[UPLOAD][permisoConcesion]', err)
+        error: (err) => console.error('[UPLOAD][permisoConcesion]')
       });
   }
 
@@ -814,7 +814,7 @@ export class AgregarVehiculoComponent implements OnInit {
             this.inspeccionFileName = file.name;
           }
         },
-        error: (err) => console.error('[UPLOAD][inspeccionMecanica]', err)
+        error: (err) => console.error('[UPLOAD][inspeccionMecanica]')
       });
   }
 
@@ -918,7 +918,7 @@ export class AgregarVehiculoComponent implements OnInit {
         }
       },
       error: (err: any) => {
-        console.error('[UPLOAD][foto]', err);
+        console.error('[UPLOAD][foto]');
         // Si quieres, puedes dejar el File o limpiar:
         // this.vehiculosForm.patchValue({ foto: null });
         // this.fotoPreviewUrl = null;

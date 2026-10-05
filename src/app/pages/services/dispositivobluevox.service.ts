@@ -35,7 +35,8 @@ export class DispositivoBluevoxService {
   }
 
   actualizarDispositivoBlue(idDispositivo: number, saveForm: any): Observable<any> {
-    return this.http.put(`${environment.API_SECURITY}/contadores/` + idDispositivo, saveForm);
+    const { idCliente: _idCliente, ...body } = saveForm || {};
+    return this.http.put(`${environment.API_SECURITY}/contadores/` + idDispositivo, body);
   }
 
   private apiUrl = `${environment.API_SECURITY}/contadores`;

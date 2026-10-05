@@ -29,7 +29,7 @@
       </div>
 
       <h3 id="am-title" class="am-title">{{ state?.title }}</h3>
-      <p id="am-msg" class="am-msg" [innerHTML]="state?.message"></p>
+      <p id="am-msg" class="am-msg">{{ state?.message }}</p>
 
       <div *ngIf="state?.inputEnabled" class="am-field">
         <label class="am-field__label">{{ state?.inputLabel }}</label>

@@ -112,9 +112,6 @@ export class MonitoreoWebSocketService implements OnDestroy {
       auth: {
         token: token
       },
-      query: {
-        token: token
-      },
       transports: ['websocket', 'polling'],
       reconnection: true,
       reconnectionAttempts: this.maxReconnectAttempts,
@@ -168,7 +165,7 @@ export class MonitoreoWebSocketService implements OnDestroy {
 
     // Evento de error de conexión
     this.socket.on('connect_error', (error: Error) => {
-      console.error('[WebSocket] Error de conexión:', error);
+      console.error('[WebSocket] Error de conexión:');
       this.isConnectedSubject.next(false);
       
       // Si el error es de autenticación, no intentar reconectar
@@ -190,7 +187,7 @@ export class MonitoreoWebSocketService implements OnDestroy {
 
     // Evento de error de reconexión
     this.socket.on('reconnect_error', (error: Error) => {
-      console.error('[WebSocket] Error al reconectar:', error);
+      console.error('[WebSocket] Error al reconectar:');
       this.reconnectAttempts++;
     });
 

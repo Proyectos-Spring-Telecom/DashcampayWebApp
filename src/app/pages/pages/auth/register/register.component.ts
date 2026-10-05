@@ -83,8 +83,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
   type = 'password';
   pwFocused = false;
   pwAllOk = false;
-  pwGuideText = getPasswordGuideText('needUpper');
-  pwGuideKey = 'needUpper';
+  pwGuideText = getPasswordGuideText('needLength');
+  pwGuideKey = 'needLength';
   readonly OTP_LENGTH = 6;
   verifyForm!: UntypedFormGroup;
 
@@ -382,7 +382,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
     this.startResendCountdown();
     this.pasajService.agregarPasajeroAfiliacion(payload).subscribe({
       next: () => {},
-      error: (err) => console.error('Error al reenviar', err)
+      error: (err) => console.error('Error al reenviar')
     });
   }
 
@@ -398,7 +398,8 @@ export class RegisterComponent implements OnInit, OnDestroy {
   this.loading = true;
 
   const codigo = (this.verifyForm.get('codigo')!.value || '').toString().trim();
-  this.pasajService.verificarPasajero(codigo).subscribe({
+  const userName = (this.afiliacionPasajero?.get('correo')?.value || '').toString().trim();
+  this.pasajService.verificarPasajero(codigo, userName).subscribe({
     next: () => {
       this.submitButton = 'Guardar';
       this.loading = false;
@@ -492,7 +493,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
 
   cargarClientes(): void {
     this.loadingClientes = true;
-    this.clientesService.obtenerClientes().subscribe({
+    this.clientesService.obtenerClientesPublicos().subscribe({
       next: (response: any) => {
         // Manejar diferentes estructuras de respuesta
         let clientes: any[] = [];
@@ -520,7 +521,7 @@ export class RegisterComponent implements OnInit, OnDestroy {
         this.loadingClientes = false;
       },
       error: (err) => {
-        console.error('Error al cargar clientes:', err);
+        console.error('Error al cargar clientes:');
         this.listaClientes = [];
         this.loadingClientes = false;
       }

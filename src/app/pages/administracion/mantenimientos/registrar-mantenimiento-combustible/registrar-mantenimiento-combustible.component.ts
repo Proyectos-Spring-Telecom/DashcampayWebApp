@@ -105,7 +105,7 @@ export class RegistrarMantenimientoCombustibleComponent implements OnInit {
         }
       },
       error: (error: unknown) => {
-        console.error('Error al obtener instalaciones:', error);
+        console.error('Error al obtener instalaciones:');
         this.instalacionesCargadas = true;
       }
     });
@@ -127,7 +127,7 @@ export class RegistrarMantenimientoCombustibleComponent implements OnInit {
         }
       },
       error: (error: unknown) => {
-        console.error('Error al obtener tipos de combustible:', error);
+        console.error('Error al obtener tipos de combustible:');
         this.tiposCombustibleCargados = true;
       }
     });
@@ -149,7 +149,7 @@ export class RegistrarMantenimientoCombustibleComponent implements OnInit {
         }
       },
       error: (error: unknown) => {
-        console.error('Error al obtener operadores:', error);
+        console.error('Error al obtener operadores:');
         this.operadoresCargados = true;
       }
     });
@@ -192,7 +192,7 @@ export class RegistrarMantenimientoCombustibleComponent implements OnInit {
       },
       error: (error) => {
         this.loading = false;
-        console.error('Error:', error);
+        console.error('Error:');
         this.alerts.open({
           type: 'error',
           title: '¡Ops!',
@@ -356,7 +356,7 @@ export class RegistrarMantenimientoCombustibleComponent implements OnInit {
           confirmText: 'Confirmar',
           backdropClose: false
         });
-        console.error('Error:', error);
+        console.error('Error:');
       }
     });
   }

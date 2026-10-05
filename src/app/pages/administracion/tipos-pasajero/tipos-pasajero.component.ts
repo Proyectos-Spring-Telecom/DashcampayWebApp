@@ -66,7 +66,7 @@ export class TiposPasajeroComponent implements OnInit {
       },
       error: (err) => {
         this.loading = false;
-        console.error('Error al obtener tipos de pasajero:', err);
+        console.error('Error al obtener tipos de pasajero:');
         this.alerts.open({
           type: 'error',
           title: '¡Error!',

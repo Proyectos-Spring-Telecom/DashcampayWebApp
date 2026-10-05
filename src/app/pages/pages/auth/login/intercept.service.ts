@@ -1,6 +1,12 @@
 // intercept-service.interceptor.ts
-import { HttpContext, HttpContextToken, HttpInterceptorFn } from '@angular/common/http';
+import {
+  HttpContext,
+  HttpContextToken,
+  HttpErrorResponse,
+  HttpInterceptorFn,
+} from '@angular/common/http';
 import { inject } from '@angular/core';
+import { catchError, throwError } from 'rxjs';
 import { AuthenticationService } from 'src/app/core/services/auth.service';
 
 // === Compatibilidad con tu versión en clase ===
@@ -42,5 +48,34 @@ export const interceptServiceInterceptor: HttpInterceptorFn = (req, next) => {
 
   // Clon único
   const finalReq = req.clone({ headers });
-  return next(finalReq);
+  return next(finalReq).pipe(
+    catchError((err: unknown) => {
+      if (!(err instanceof HttpErrorResponse)) {
+        return throwError(() => err);
+      }
+      const raw = typeof err.error === 'string' ? err.error : '';
+      if (!pareceErrorDeMotor(raw)) {
+        return throwError(() => err);
+      }
+      return throwError(
+        () =>
+          new HttpErrorResponse({
+            error:
+              (err.status ?? 0) >= 500
+                ? 'Error interno del servidor'
+                : 'Solicitud inválida.',
+            headers: err.headers,
+            status: err.status,
+            statusText: err.statusText,
+            url: err.url ?? undefined,
+          }),
+      );
+    }),
+  );
 };
+
+function pareceErrorDeMotor(text: string): boolean {
+  return /queryfailed|sql syntax|unknown column|duplicate entry|econnreset|econnrefused|sqlstate/i.test(
+    text,
+  );
+}

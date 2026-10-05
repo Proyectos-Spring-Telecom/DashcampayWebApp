@@ -153,7 +153,7 @@ export class RegistrarMantenimientoVehicularComponent implements OnInit {
           confirmText: 'Confirmar',
           backdropClose: false
         });
-        console.error('Error:', error);
+        console.error('Error:');
         this.regresar();
       }
     });
@@ -193,7 +193,7 @@ export class RegistrarMantenimientoVehicularComponent implements OnInit {
         }));
       },
       error: (error: unknown) => {
-        console.error('Error al obtener instalaciones:', error);
+        console.error('Error al obtener instalaciones:');
       }
     });
   }
@@ -207,7 +207,7 @@ export class RegistrarMantenimientoVehicularComponent implements OnInit {
         }));
       },
       error: (error: unknown) => {
-        console.error('Error al obtener referencias:', error);
+        console.error('Error al obtener referencias:');
       }
     });
   }
@@ -226,7 +226,7 @@ export class RegistrarMantenimientoVehicularComponent implements OnInit {
         });
       },
       error: (error: unknown) => {
-        console.error('Error al obtener talleres:', error);
+        console.error('Error al obtener talleres:');
       }
     });
   }
@@ -422,7 +422,7 @@ export class RegistrarMantenimientoVehicularComponent implements OnInit {
           confirmText: 'Confirmar',
           backdropClose: false
         });
-        console.error('Error:', error);
+        console.error('Error:');
       }
     });
   }

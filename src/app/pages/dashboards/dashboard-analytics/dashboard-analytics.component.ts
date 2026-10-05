@@ -70,7 +70,7 @@ export class DashboardAnalyticsComponent implements OnInit {
         this.cargando = false;
       },
       error: (error) => {
-        console.error('Error al cargar métricas:', error);
+        console.error('Error al cargar métricas:');
         this.cargando = false;
       }
     });

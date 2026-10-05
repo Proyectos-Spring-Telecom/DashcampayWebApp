@@ -84,7 +84,7 @@ export class ListarMantenimientoKilometrajeComponent implements OnInit {
           };
         } catch (err) {
           this.loading = false;
-          console.error('Error en la solicitud de datos:', err);
+          console.error('Error en la solicitud de datos:');
           return { data: [], totalCount: 0 };
         }
       }
@@ -193,7 +193,7 @@ export class ListarMantenimientoKilometrajeComponent implements OnInit {
           confirmText: 'Confirmar',
           backdropClose: false
         });
-        console.error('Error:', error);
+        console.error('Error:');
       }
     });
   }
@@ -229,7 +229,7 @@ export class ListarMantenimientoKilometrajeComponent implements OnInit {
           confirmText: 'Confirmar',
           backdropClose: false
         });
-        console.error('Error:', error);
+        console.error('Error:');
       }
     });
   }

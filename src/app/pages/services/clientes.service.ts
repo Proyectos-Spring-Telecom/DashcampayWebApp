@@ -14,9 +14,15 @@ export class ClientesService {
 		return this.http.get(`${environment.API_SECURITY}/clientes/${page}/${pageSize}`);
 	}
 
+  /** Listado autenticado (árbol JWT). Usar en pantallas admin. */
   obtenerClientes(): Observable<any> {
-		return this.http.get(`${environment.API_SECURITY}/clientes/public`);
-	}
+    return this.http.get(`${environment.API_SECURITY}/clientes/list`);
+  }
+
+  /** Solo id+nombre, sin JWT. Registro / signup público. */
+  obtenerClientesPublicos(): Observable<any> {
+    return this.http.get(`${environment.API_SECURITY}/clientes/public`);
+  }
 
   obtenerClientesList(): Observable<any> {
     return this.http.get(`${environment.API_SECURITY}/clientes/list`);
@@ -35,7 +41,8 @@ export class ClientesService {
     }
 
   actualizarCliente(idCliente: number, saveForm: any): Observable<any> {
-    return this.http.put(`${environment.API_SECURITY}/clientes/` + idCliente, saveForm);
+    const { idPadre: _idPadre, ...body } = saveForm || {};
+    return this.http.put(`${environment.API_SECURITY}/clientes/` + idCliente, body);
   }
 
   private apiUrl = `${environment.API_SECURITY}/clientes`;

@@ -136,6 +136,14 @@ onSubmit() {
       }
       if (!backendMsg) backendMsg = err?.statusText || `HTTP ${err?.status || ''}`.trim();
 
+      if (
+        (err?.status === 401 && !backendMsg.toLowerCase().includes('bloqueada')) ||
+        err?.status === 404 ||
+        this.isGenericLoginFailure(backendMsg)
+      ) {
+        backendMsg = 'Credenciales invalidas';
+      }
+
       const message = this.isLoginThrottled(err, backendMsg)
         ? 'Intentos excedidos, por favor espera unos minutos y vuelve a intentarlo.'
         : backendMsg;
@@ -246,10 +254,21 @@ onSubmit() {
       return;
     }
 
-    this.loading = true;
     const codigo = (this.verifyForm.get('codigo')!.value || '').toString().trim();
+    const userName = (this.emailForm.get('userName')?.value || this.loginForm.get('userName')?.value || '').toString().trim();
+    if (!userName) {
+      this.alerts.open({
+        type: 'warning',
+        title: '¡Ops!',
+        message: 'Indica el correo de la cuenta antes de validar el código.',
+        confirmText: 'Entendido',
+        backdropClose: false
+      });
+      return;
+    }
 
-    this.auth.reenviarCodigo({ codigo }).subscribe({
+    this.loading = true;
+    this.auth.reenviarCodigo({ codigo, userName }).subscribe({
       next: (msg: string) => {
         this.loading = false;
         this.otp = Array(6).fill('');
@@ -428,6 +447,15 @@ closeOtpModal(ev?: Event) {
     this.cdr.markForCheck();
   }
   resendMsg: string | null = null;
+
+  private isGenericLoginFailure(backendMsg: string): boolean {
+    const text = (backendMsg || '').toLowerCase();
+    return (
+      text.includes('no se encontró al usuario') ||
+      text.includes('no se encontro al usuario') ||
+      text.includes('not found')
+    );
+  }
 
   private isLoginThrottled(err: HttpErrorResponse, backendMsg: string): boolean {
     if (err?.status === 429) {

@@ -20,8 +20,7 @@ export class DashboardComponent implements OnInit {
   opcionesFiltro = [
     { valor: 1, etiqueta: 'Hoy' },
     { valor: 2, etiqueta: '7 Días' },
-    { valor: 3, etiqueta: 'Mes Actual' },
-    { valor: 4, etiqueta: 'Año Actual' }
+    { valor: 3, etiqueta: 'Mes Actual' }
   ];
   filtroSeleccionado = this.opcionesFiltro[0];
   metricas: any = null;
@@ -242,7 +241,7 @@ export class DashboardComponent implements OnInit {
         this.cdr.detectChanges();
       },
       error: (error) => {
-        console.error('Error al cargar métricas:', error);
+        console.error('Error al cargar métricas:');
         this.cargando = false;
         this.cdr.detectChanges();
       }
@@ -270,8 +269,6 @@ export class DashboardComponent implements OnInit {
         return 'Ingresos de los últimos 7 días';
       case 3:
         return 'Ingresos del mes';
-      case 4:
-        return 'Ingresos del año';
       default:
         return 'Ingresos del día';
     }

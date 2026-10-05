@@ -33,6 +33,12 @@ import { AuthenticationService } from 'src/app/core/services/auth.service';
 import { UsuariosService } from 'src/app/pages/services/usuarios.service';
 import { finalize } from 'rxjs';
 import { AlertsService } from 'src/app/pages/pages/modal/alerts.service';
+import {
+  getPasswordGuideText,
+  getPasswordRuleKey,
+  isPasswordValid,
+  PASSWORD_MIN_LENGTH,
+} from 'src/app/core/validators/password-policy';
 
 declare const google: any;
 
@@ -300,7 +306,7 @@ export class PerfilUsuarioComponent {
     {
       // ✅ NUEVOS NOMBRES
       passwordActual: ['', Validators.required],
-      passwordNueva: ['', [Validators.required, Validators.minLength(12)]],
+      passwordNueva: ['', [Validators.required, Validators.minLength(PASSWORD_MIN_LENGTH)]],
       passwordNuevaConfirmacion: ['', Validators.required],
     },
     { validators: this.passwordsMatchValidator }
@@ -308,30 +314,11 @@ export class PerfilUsuarioComponent {
 
   onPasswordInput(): void {
     const value = this.passwordForm.get('passwordNueva')?.value || '';
-    const checks = {
-      upper: /\p{Lu}/u.test(value),
-      lower: /\p{Ll}/u.test(value),
-      number: /[0-9]/.test(value),
-      special: /[^\p{L}\p{N}]/u.test(value),
-      length: value.length >= 12 && value.length <= 16,
-    };
-    const missing: string[] = [];
-    if (!checks.upper) missing.push('una mayúscula');
-    if (!checks.lower) missing.push('una minúscula');
-    if (!checks.number) missing.push('un número');
-    if (!checks.special) missing.push('un carácter especial');
-    const allOtherValid = checks.upper && checks.lower && checks.number && checks.special;
-    if (allOtherValid && !checks.length) missing.push('entre 12 y 16 caracteres');
-
-    this.isAllValid = missing.length === 0;
+    const key = getPasswordRuleKey(value);
+    this.isAllValid = key === 'ok';
     const prevMsg = this.passwordStrengthMsg;
-    if (this.isAllValid) {
-      this.passwordStrengthMsg = 'Contraseña válida';
-      this.passwordStrengthColor = 'valid';
-    } else {
-      this.passwordStrengthMsg = 'Debe incluir: ' + missing.join(', ') + '.';
-      this.passwordStrengthColor = 'invalid';
-    }
+    this.passwordStrengthMsg = getPasswordGuideText(key);
+    this.passwordStrengthColor = this.isAllValid ? 'valid' : 'invalid';
     if (this.passwordStrengthMsg !== prevMsg) this.hintVersion++;
   }
 
@@ -359,7 +346,7 @@ export class PerfilUsuarioComponent {
     const c = f.get('passwordNuevaConfirmacion')?.value;
     const allFilled = !!a && !!n && !!c;
     const match = n === c;
-    return allFilled && match && !this.loading;
+    return allFilled && match && isPasswordValid(n) && !this.loading;
   }
 
   // ✅ validador con NUEVOS nombres
@@ -371,7 +358,7 @@ export class PerfilUsuarioComponent {
 
   // ✅ Ejecuta el servicio (sin dry-run). Mantengo logging.
   actualizarContrasena(): void {
-    if (this.passwordForm.invalid) {
+    if (this.passwordForm.invalid || !isPasswordValid(this.passwordForm.get('passwordNueva')?.value || '')) {
       this.passwordForm.markAllAsTouched();
       this.alerts.open({
         type: 'error',
@@ -411,7 +398,7 @@ export class PerfilUsuarioComponent {
         },
         error: (error) => {
           const mensaje = error?.error?.message || 'Ocurrió un error al actualizar la contraseña.';
-          console.error('[ERROR] actualizarContrasena', error);
+          console.error('[ERROR] actualizarContrasena');
           this.alerts.open({
             type: 'error',
             title: '¡Ops!',

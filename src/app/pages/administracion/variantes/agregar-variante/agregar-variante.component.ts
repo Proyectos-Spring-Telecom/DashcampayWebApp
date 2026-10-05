@@ -166,7 +166,7 @@ export class AgregarVarianteComponent implements OnInit, AfterViewInit, OnDestro
         })).filter((t: any) => Number.isFinite(t.id) && t.id > 0);
       },
       error: (error) => {
-        console.error('Error al obtener tipos de tarifa:', error);
+        console.error('Error al obtener tipos de tarifa:');
         this.listaTiposTarifa = [];
       }
     });
@@ -182,7 +182,7 @@ export class AgregarVarianteComponent implements OnInit, AfterViewInit, OnDestro
         })).filter((t: any) => Number.isFinite(t.id) && t.id > 0);
       },
       error: (error) => {
-        console.error('Error al obtener tipos de variante:', error);
+        console.error('Error al obtener tipos de variante:');
         this.listaTiposVariante = [];
       }
     });
@@ -418,7 +418,7 @@ export class AgregarVarianteComponent implements OnInit, AfterViewInit, OnDestro
         this.rutasFiltradas = this.listaRutas;
       },
       error: (err) => {
-        console.error('[RUTAS][ERROR]', err);
+        console.error('[RUTAS][ERROR]');
         this.listaRutas = [];
         this.rutasFiltradas = [];
       },
@@ -1135,7 +1135,7 @@ agregarTarifa(): void {
         confirmText: 'Confirmar',
         backdropClose: false,
       });
-      console.error('[TARIFA][ERROR]', err);
+      console.error('[TARIFA][ERROR]');
     }
   );
 }

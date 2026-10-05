@@ -64,7 +64,7 @@ export class AgregarTransbordoComponent implements OnInit {
         this.listaTiposDescuento = response.data || response || [];
       },
       error: (err) => {
-        console.error('Error al obtener tipos de descuento:', err);
+        console.error('Error al obtener tipos de descuento:');
         this.listaTiposDescuento = [];
       }
     });
@@ -125,7 +125,7 @@ export class AgregarTransbordoComponent implements OnInit {
         this.actualizarNumeroTransbordos();
       },
       error: (e) => {
-        console.error('Error obtenerTransbordo', e);
+        console.error('Error obtenerTransbordo');
       }
     });
   }
@@ -142,6 +142,16 @@ export class AgregarTransbordoComponent implements OnInit {
   }
 
   agregarDetalle() {
+    if (this.detallesFormArray.length >= 20) {
+      this.alerts.open({
+        type: 'warning',
+        title: 'Límite',
+        message: 'No se permiten más de 20 transbordos.',
+        confirmText: 'Entendido',
+        backdropClose: false,
+      });
+      return;
+    }
     const nuevoNroTransbordo = this.detallesFormArray.length + 1;
     this.detallesFormArray.push(this.fb.group({
       costo: [null, [Validators.required, Validators.min(0)]],

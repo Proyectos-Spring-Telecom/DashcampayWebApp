@@ -97,7 +97,7 @@ export class RegistrarMantenimientoKilometrajeComponent implements OnInit {
         }
       },
       error: (error: unknown) => {
-        console.error('Error al obtener instalaciones:', error);
+        console.error('Error al obtener instalaciones:');
         this.instalacionesCargadas = true; // Marcar como cargado incluso con error
       }
     });
@@ -123,7 +123,7 @@ export class RegistrarMantenimientoKilometrajeComponent implements OnInit {
       },
       error: (error) => {
         this.loading = false;
-        console.error('Error:', error);
+        console.error('Error:');
         this.alerts.open({
           type: 'error',
           title: '¡Ops!',
@@ -257,7 +257,7 @@ export class RegistrarMantenimientoKilometrajeComponent implements OnInit {
           confirmText: 'Confirmar',
           backdropClose: false
         });
-        console.error('Error:', error);
+        console.error('Error:');
       }
     });
   }
