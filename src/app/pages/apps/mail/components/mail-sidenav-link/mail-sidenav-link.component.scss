@@ -1,7 +1,0 @@
-a.active {
-  @apply bg-primary-600 text-on-primary-600;
-}
-
-a:not(.active):hover {
-  @apply bg-hover;
-}
