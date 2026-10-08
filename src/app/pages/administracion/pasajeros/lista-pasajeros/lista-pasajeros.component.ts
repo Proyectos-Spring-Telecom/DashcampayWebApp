@@ -1,3 +1,4 @@
+import { mensajeDeError } from 'src/app/core/utils/mensaje-error';
 import { Component, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -174,7 +175,7 @@ export class ListaPasajerosComponent implements OnInit {
         this.alerts.open({
           type: 'error',
           title: '¡Ops!',
-          message: String(error),
+          message: mensajeDeError(error),
           confirmText: 'Confirmar',
           backdropClose: false,
         });
@@ -211,7 +212,7 @@ export class ListaPasajerosComponent implements OnInit {
         this.alerts.open({
           type: 'error',
           title: '¡Ops!',
-          message: String(error),
+          message: mensajeDeError(error),
           confirmText: 'Confirmar',
           backdropClose: false,
         });

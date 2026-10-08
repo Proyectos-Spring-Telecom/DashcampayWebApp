@@ -1,3 +1,4 @@
+import { loadGoogleMaps } from 'src/app/core/security/load-google-maps';
 import { Component, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, UntypedFormControl } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -177,7 +178,10 @@ export class ListaTransaccionesComponent implements OnInit {
     const lngStr = (lngInicial != null && lngInicial !== '') ? String(lngInicial) : ((lngFinal != null && lngFinal !== '') ? String(lngFinal) : '');
 
     const tipoRaw = (raw?.tipoTransaccion ?? raw?.tipo ?? '').toString();
-    const tipoUI = tipoRaw === 'RECARGA' ? 'Recarga' : tipoRaw === 'DEBITO' ? 'Débito' : (tipoRaw || null);
+    const tipoUI = tipoRaw === 'RECARGA' ? 'Recarga'
+      : tipoRaw === 'DEBITO' ? 'Débito'
+      : tipoRaw === 'RECHAZADO' ? 'Rechazado (no cobrado)'
+      : (tipoRaw || null);
 
     const fechaISO = raw?.fechaHora ?? raw?.FechaHora ?? null;
     const fecha = fechaISO ? new Date(fechaISO) : null;
@@ -216,16 +220,9 @@ export class ListaTransaccionesComponent implements OnInit {
   }
 
   private waitForGoogleMaps(): Promise<void> {
-    if ((window as any).google?.maps) return Promise.resolve();
-    return new Promise((resolve, reject) => {
-      const start = Date.now();
-      const tick = () => {
-        if ((window as any).google?.maps) return resolve();
-        if (Date.now() - start > 8000) return reject('Google Maps no cargó');
-        requestAnimationFrame(tick);
-      };
-      tick();
-    });
+
+    return loadGoogleMaps();
+
   }
 
   private initializeMap(lat: string, lng: string): void {

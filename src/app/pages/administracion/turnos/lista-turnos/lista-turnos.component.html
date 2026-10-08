@@ -28,12 +28,6 @@
               <mat-icon svgIcon="mat:restore"></mat-icon>
               <span class="btn-text">Limpiar</span>
             </button>
-
-            <!-- <button (click)="agregarTurno()" mat-raised-button color="warn" type="button"
-              class="btn-soft textGenerico" matTooltip="Agregar usuario">
-              <mat-icon>add</mat-icon>
-              <span class="btn-text">Agregar</span>
-            </button> -->
           </div>
         </div>
 
@@ -115,11 +109,6 @@
               </div>
             </dxi-column>
             <div *dxTemplate="let row of 'Acciones'" class="d-flex gap-3 justify-content-center">
-              <div>
-                <button class="btn-edit" (click)="actualizarTurno(row.data.id)">
-                  <mat-icon class="btn__icon">edit</mat-icon>
-                </button>
-              </div>
               <div>
                 <button *ngIf="row.data.estatus === 0" class="btn-active" (click)="activar(row.data)">
                   <mat-icon class="btn__icon">check_circle</mat-icon>

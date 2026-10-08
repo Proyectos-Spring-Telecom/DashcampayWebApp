@@ -1,3 +1,5 @@
+import { mensajeDeError } from 'src/app/core/utils/mensaje-error';
+import { loadGoogleMaps } from 'src/app/core/security/load-google-maps';
 import { Component, DestroyRef, inject, NgZone, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -180,19 +182,23 @@ export class ListaRutasComponent implements OnInit {
   public selectedNombreFinal: string | null = null;
   public showMap = false;
 
-  private readonly markerIconInicio: google.maps.Icon = {
-    url: new URL('assets/images/markerGreen.png', document.baseURI).toString(),
-    scaledSize: new google.maps.Size(42, 42),
-    origin: new google.maps.Point(0, 0),
-    anchor: new google.maps.Point(21, 42),
-  };
+  // Getters, no campos: el componente se construye antes de que cargue Maps.
+  private get markerIconInicio(): google.maps.Icon {
+    return this.markerIcon('assets/images/markerGreen.png');
+  }
 
-  private readonly markerIconFin: google.maps.Icon = {
-    url: new URL('assets/images/markerRed.png', document.baseURI).toString(),
-    scaledSize: new google.maps.Size(42, 42),
-    origin: new google.maps.Point(0, 0),
-    anchor: new google.maps.Point(21, 42),
-  };
+  private get markerIconFin(): google.maps.Icon {
+    return this.markerIcon('assets/images/markerRed.png');
+  }
+
+  private markerIcon(ruta: string): google.maps.Icon {
+    return {
+      url: new URL(ruta, document.baseURI).toString(),
+      scaledSize: new google.maps.Size(42, 42),
+      origin: new google.maps.Point(0, 0),
+      anchor: new google.maps.Point(21, 42),
+    };
+  }
 
   private getCoords(geojson: any): { lat: number | null; lng: number | null } {
     const c = geojson?.features?.[0]?.geometry?.coordinates;
@@ -232,7 +238,7 @@ export class ListaRutasComponent implements OnInit {
         this.alerts.open({
           type: 'error',
           title: '¡Ops!',
-          message: String(error),
+          message: mensajeDeError(error),
           confirmText: 'Confirmar',
           backdropClose: false,
         });
@@ -269,7 +275,7 @@ export class ListaRutasComponent implements OnInit {
         this.alerts.open({
           type: 'error',
           title: '¡Ops!',
-          message: String(error),
+          message: mensajeDeError(error),
           confirmText: 'Confirmar',
           backdropClose: false,
         });
@@ -409,16 +415,9 @@ export class ListaRutasComponent implements OnInit {
   }
 
   private waitForGoogleMaps(): Promise<void> {
-    if ((window as any).google?.maps) return Promise.resolve();
-    return new Promise((resolve, reject) => {
-      const start = Date.now();
-      const tick = () => {
-        if ((window as any).google?.maps) return resolve();
-        if (Date.now() - start > 8000) return reject('Google Maps no cargó');
-        requestAnimationFrame(tick);
-      };
-      tick();
-    });
+
+    return loadGoogleMaps();
+
   }
 
   public inicioDireccion: string | null = null;

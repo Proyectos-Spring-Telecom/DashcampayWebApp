@@ -1,9 +1,0 @@
-<a
-  [routerLinkActiveOptions]="link.routerLinkActiveOptions || { exact: false }"
-  [routerLink]="link.route"
-  class="text-base flex items-center px-6 py-2 ltr:rounded-r-full rtl:rounded-l-full ltr:mr-6 rtl:ml-6 relative mb-2 transition ease-in-out duration-200 select-none"
-  matRipple
-  routerLinkActive="active">
-  <mat-icon [svgIcon]="link.icon" class="block ltr:mr-4 rtl:ml-4"></mat-icon>
-  <span class="block">{{ link.label }}</span>
-</a>

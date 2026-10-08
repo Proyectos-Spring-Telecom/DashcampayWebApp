@@ -105,11 +105,16 @@
               </dxi-column>
             <dxi-column dataField="monto" caption="Monto" alignment="center" cellTemplate="sald">
               <div *dxTemplate="let f of 'sald'">
-                {{
-                  (f?.data?.tipoTransaccion === 'DEBITO'
-                  ? 0 - (f?.data?.monto ?? 0)
-                  : (f?.data?.monto ?? 0)) | currency:'$'
-                }}
+                <ng-container *ngIf="f?.data?.tipoTransaccion === 'RECHAZADO'; else montoMovido">
+                  {{ (f?.data?.monto ?? 0) | currency:'$' }} <span class="monto-no-cobrado">no cobrado</span>
+                </ng-container>
+                <ng-template #montoMovido>
+                  {{
+                    (f?.data?.tipoTransaccion === 'DEBITO'
+                    ? 0 - (f?.data?.monto ?? 0)
+                    : (f?.data?.monto ?? 0)) | currency:'$'
+                  }}
+                </ng-template>
               </div>
             </dxi-column>
             <dxi-column dataField="tipoTransaccion" caption="Tipo Transacción" alignment="center" cellTemplate="est">
@@ -119,6 +124,9 @@
                 </span>
                 <span *ngIf="f.data.tipoTransaccion === 'DEBITO' " class="estatus estatus-inactivo">
                   Débito
+                </span>
+                <span *ngIf="f.data.tipoTransaccion === 'RECHAZADO' " class="estatus estatus-rechazado">
+                  Rechazado
                 </span>
               </div>
             </dxi-column>

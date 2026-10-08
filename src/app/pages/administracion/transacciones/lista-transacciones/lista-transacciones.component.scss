@@ -298,6 +298,17 @@
   color: #f5d4d4;
 }
 
+// Intento de cobro rechazado (saldo insuficiente): no movió dinero.
+.estatus-rechazado {
+  background: #6c757d;
+  color: #eef0f2;
+}
+
+.monto-no-cobrado {
+  color: #6c757d;
+  font-size: 12px;
+}
+
 // Estilos para campos de fecha más pequeños
 ::ng-deep .filtro-date-field {
   .mat-mdc-form-field-subscript-wrapper {

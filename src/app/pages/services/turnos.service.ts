@@ -18,20 +18,12 @@ export class TurnoService {
     return this.http.get(`${environment.API_SECURITY}/turnos/list`);
   }
 
-  agregarTurno(data: FormData) {
-    return this.http.post(environment.API_SECURITY + '/turnos', data);
-  }
-
   eliminarTurno(idTurno: number) {
     return this.http.delete(environment.API_SECURITY + '/turnos/' + idTurno);
   }
 
   obtenerTurno(idTurno: number): Observable<any> {
     return this.http.get<any>(environment.API_SECURITY + '/turnos/' + idTurno);
-  }
-
-  actualizarTurno(idTurno: number, saveForm: any): Observable<any> {
-    return this.http.put(`${environment.API_SECURITY}/turnos/` + idTurno, saveForm);
   }
 
   private apiUrl = `${environment.API_SECURITY}/turnos`;

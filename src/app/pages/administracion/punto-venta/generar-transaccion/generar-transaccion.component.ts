@@ -122,8 +122,9 @@ export class GenerarTransaccionComponent implements OnInit {
     this.tarjetaSeleccionada = null; // Limpiar tarjeta seleccionada
     this.tarjetaInfo = {}; // Limpiar información de la tarjeta
     
-    // Si el monedero tiene customerId, obtener las tarjetas y direcciones
-    if (m?.customerId !== null && m?.customerId !== undefined) {
+    // Las tarjetas solo las usa el pasajero en su propia sesión; caja y demás
+    // roles recargan en efectivo y no necesitan ver tarjetas de nadie.
+    if (this.esPasajero && m?.customerId !== null && m?.customerId !== undefined) {
       this.obtenerTarjetas(m.customerId);
     } else {
       this.tarjetasCliente = [];
@@ -402,6 +403,10 @@ export class GenerarTransaccionComponent implements OnInit {
       script.id = 'netpay-sdk';
       script.type = 'text/javascript';
       script.src = 'https://docs.netpay.mx/cdn/v1.3/netpay.min.js';
+      // SRI: el SDK toca datos de tarjeta; si el archivo del CDN cambia, no se ejecuta.
+      // Si NetPay publica una versión nueva hay que recalcular el hash.
+      script.integrity = 'sha384-d5K06qiOhDcgq+B7vHRbPsWiEOA/wsIr67UbixDxgodfS8BTik1ctQjApYyHJHsp';
+      script.crossOrigin = 'anonymous';
       script.onload = () => resolve();
       script.onerror = (e) => reject(e);
       document.head.appendChild(script);

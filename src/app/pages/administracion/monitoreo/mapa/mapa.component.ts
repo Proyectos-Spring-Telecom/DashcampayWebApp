@@ -1,3 +1,4 @@
+import { loadGoogleMaps } from 'src/app/core/security/load-google-maps';
 // mapa.component.ts
 import { AfterViewInit, Component, OnDestroy, OnInit } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
@@ -697,16 +698,9 @@ export class MapaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private waitForGoogleMaps(): Promise<void> {
-    if ((window as any).google?.maps) return Promise.resolve();
-    return new Promise((resolve, reject) => {
-      const start = Date.now();
-      const tick = () => {
-        if ((window as any).google?.maps) return resolve();
-        if (Date.now() - start > 8000) return reject('Timeout Google Maps');
-        requestAnimationFrame(tick);
-      };
-      tick();
-    });
+
+    return loadGoogleMaps();
+
   }
 
   private initMap(): void {

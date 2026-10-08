@@ -1,3 +1,4 @@
+import { mensajeDeError } from 'src/app/core/utils/mensaje-error';
 import { Component, DestroyRef, inject, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, UntypedFormControl } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -203,7 +204,7 @@ customizeTooltip(info: any) {
         this.alerts.open({
           type: 'error',
           title: '¡Ops!',
-          message: String(error),
+          message: mensajeDeError(error),
           confirmText: 'Confirmar',
           backdropClose: false,
         });
@@ -239,7 +240,7 @@ customizeTooltip(info: any) {
         this.alerts.open({
           type: 'error',
           title: '¡Ops!',
-          message: String(error),
+          message: mensajeDeError(error),
           confirmText: 'Confirmar',
           backdropClose: false,
         });

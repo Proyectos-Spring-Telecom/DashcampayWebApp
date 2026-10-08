@@ -1,7 +1,0 @@
-.mat-expansion-panel:not([class*="mat-elevation-z"]) {
-  @apply shadow-none border-b border-x;
-
-  &:first-of-type {
-    @apply border-t;
-  }
-}

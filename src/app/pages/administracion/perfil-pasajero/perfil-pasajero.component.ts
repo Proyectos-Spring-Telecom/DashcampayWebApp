@@ -1,3 +1,4 @@
+import { loadGoogleMaps } from 'src/app/core/security/load-google-maps';
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, UntypedFormControl } from '@angular/forms';
 import { fadeInRight400ms } from '@vex/animations/fade-in-right.animation';
@@ -600,16 +601,9 @@ export class PerfilPasajeroComponent implements OnInit {
   fechaFinFiltro: string | null = null;
 
   private waitForGoogleMaps(): Promise<void> {
-    if ((window as any).google?.maps) return Promise.resolve();
-    return new Promise((resolve, reject) => {
-      const start = Date.now();
-      const tick = () => {
-        if ((window as any).google?.maps) return resolve();
-        if (Date.now() - start > 8000) return reject('Google Maps no cargó');
-        requestAnimationFrame(tick);
-      };
-      tick();
-    });
+
+    return loadGoogleMaps();
+
   }
 
 }

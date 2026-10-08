@@ -1,3 +1,4 @@
+import { fechaLocal, ymdLocal } from 'src/app/core/utils/fechas';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, UntypedFormControl, ValidationErrors, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -230,7 +231,7 @@ export class AgregarOperadorComponent implements OnInit {
       setPdfFileName(certificadoMedico, 'certificadoFileName');
 
       const fechaNacimiento = fechaNacimientoRaw
-        ? new Date(String(fechaNacimientoRaw).split('T')[0])
+        ? fechaLocal(fechaNacimientoRaw)
         : null;
       const fechaExpedicion = fechaExpedicionRaw
         ? String(fechaExpedicionRaw).split('T')[0]
@@ -251,8 +252,8 @@ export class AgregarOperadorComponent implements OnInit {
           numeroLicencia: numeroLicencia ?? '',
           fechaNacimiento,
           vigencia: {
-            start: fechaExpedicion ? new Date(fechaExpedicion) : null,
-            end: fechaVencimiento ? new Date(fechaVencimiento) : null
+            start: fechaLocal(fechaExpedicion),
+            end: fechaLocal(fechaVencimiento)
           },
           idUsuario: idUsuario != null ? Number(idUsuario) : null,
           estatus: estatus != null ? Number(estatus) : 1,
@@ -483,13 +484,13 @@ export class AgregarOperadorComponent implements OnInit {
     const formValue = this.operadorForm.value;
     const vigencia = formValue.vigencia || {};
     const fechaNacimiento = formValue.fechaNacimiento instanceof Date 
-      ? formValue.fechaNacimiento.toISOString().split('T')[0] 
+      ? ymdLocal(formValue.fechaNacimiento) 
       : formValue.fechaNacimiento;
     const payload = {
       ...formValue,
       fechaNacimiento,
-      fechaExpedicion: vigencia.start ? vigencia.start.toISOString().split('T')[0] : null,
-      fechaVencimiento: vigencia.end ? vigencia.end.toISOString().split('T')[0] : null
+      fechaExpedicion: ymdLocal(vigencia.start),
+      fechaVencimiento: ymdLocal(vigencia.end)
     };
     delete payload.idCliente;
     delete payload.vigencia;
@@ -592,7 +593,7 @@ export class AgregarOperadorComponent implements OnInit {
     // getRawValue incluye controles deshabilitados (idUsuario en modo edición)
     const formValue = this.operadorForm.getRawValue();
     const fechaNacimiento = formValue.fechaNacimiento instanceof Date 
-      ? formValue.fechaNacimiento.toISOString().split('T')[0] 
+      ? ymdLocal(formValue.fechaNacimiento) 
       : formValue.fechaNacimiento;
     // Al editar no se envían vigencia, categoría ni tipo de licencia (no se actualizan)
     const payload: any = {

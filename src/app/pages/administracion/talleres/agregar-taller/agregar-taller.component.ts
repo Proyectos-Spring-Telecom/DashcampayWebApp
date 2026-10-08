@@ -11,7 +11,7 @@ import {
   NOMBRE_SIN_ESPECIALES_REGEX,
   onPasteNombreSinEspeciales
 } from 'src/app/core/validators/nombre-sin-especiales';
-import { googleMapsScriptUrl } from 'src/app/core/security/load-google-maps';
+import { loadGoogleMaps as cargarGoogleMaps } from 'src/app/core/security/load-google-maps';
 
 declare const google: any;
 
@@ -163,39 +163,9 @@ export class AgregarTallerComponent implements OnInit, AfterViewInit, OnDestroy 
   }
 
   private loadGoogleMaps(): Promise<void> {
-    const w = window as any;
-    if (w.google && w.google.maps) {
-      this.initMap();
-      return Promise.resolve();
-    }
 
-    return new Promise((resolve, reject) => {
-      const scriptId = 'gmaps-sdk-taller';
-      const existing = document.getElementById(scriptId) as HTMLScriptElement | null;
-      if (existing) {
-        existing.addEventListener('load', () => {
-          this.initMap();
-          resolve();
-        });
-        return;
-      }
-      const script = document.createElement('script');
-      script.id = scriptId;
-      const src = googleMapsScriptUrl('places');
-      if (!src) {
-        reject(new Error('No se pudo cargar Google Maps'));
-        return;
-      }
-      script.src = src;
-      script.async = true;
-      script.defer = true;
-      script.onload = () => {
-        this.initMap();
-        resolve();
-      };
-      script.onerror = () => reject(new Error('No se pudo cargar Google Maps'));
-      document.head.appendChild(script);
-    });
+    return cargarGoogleMaps();
+
   }
 
   private initMap(): void {

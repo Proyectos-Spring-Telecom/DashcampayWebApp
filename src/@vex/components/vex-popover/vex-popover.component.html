@@ -1,6 +1,6 @@
 <div @transformPopover class="vex-popover">
   <ng-container [ngSwitch]="renderMethod">
-    <div *ngSwitchCase="'text'" [innerHTML]="content"></div>
+    <div *ngSwitchCase="'text'">{{ content }}</div>
     <ng-container *ngSwitchCase="'template'">
       <ng-container
         *ngTemplateOutlet="content; context: context"></ng-container>

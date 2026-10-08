@@ -48,7 +48,6 @@
               "simplebar",
               "highlight.js",
               "faker",
-              "showdown",
               "core-js",
               "dom-set",
               "dom-plane",
@@ -61,7 +60,6 @@
               "lodash.memoize",
               "lodash.throttle",
               "luxon",
-              "quill",
               "seedrandom"
             ],
             "vendorChunk": true,
@@ -73,6 +71,12 @@
           },
           "configurations": {
             "production": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.prod.ts"
+                }
+              ],
               "optimization": true,
               "outputHashing": "all",
               "sourceMap": false,
@@ -87,6 +91,14 @@
                   "maximumError": "5mb"
                 }
               ]
+            },
+            "local": {
+              "fileReplacements": [
+                {
+                  "replace": "src/environments/environment.ts",
+                  "with": "src/environments/environment.local.ts"
+                }
+              ]
             }
           }
         },
@@ -98,6 +110,9 @@
           "configurations": {
             "production": {
               "buildTarget": "vex:build:production"
+            },
+            "local": {
+              "buildTarget": "vex:build:local"
             }
           }
         },

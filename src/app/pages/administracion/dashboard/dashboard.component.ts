@@ -33,18 +33,19 @@ export class DashboardComponent implements OnInit {
 
   kpis = {
     ingresosHoy: 0,
-    deltaIngresos: 8.3,
+    deltaIngresos: 0,
     pasajerosValidadosHoy: 0,
     ticketProm: 0,
     pctElectronico: 0,
     validacionesOk: 0,
     validacionesFail: 0,
     enServicio: 0,
-    totalVehiculos: 220,
-    cumplimientoTurnos: 0,
+    totalVehiculos: 0,
+    // null = sin datos en el período (se muestra "—").
+    cumplimientoTurnos: null as number | null,
     turnosInicio: 0,
     turnosFin: 0,
-    ocupacion: 0
+    ocupacion: null as number | null
   };
 
   topRutas: any[] = [];
@@ -73,7 +74,8 @@ export class DashboardComponent implements OnInit {
   mapMarkers: any[] = [];
 
   ngOnInit(): void {
-    this.simularDatos();
+    // simularDatos() rellenaba KPIs y gráficas con cifras aleatorias que se
+    // veían como reales; el tablero sólo muestra lo que devuelve la API.
     this.cargarMetricas();
     setInterval(() => this.ahora = new Date(), 30000);
   }
@@ -127,6 +129,16 @@ export class DashboardComponent implements OnInit {
           if (data.viajesAbiertos.totalValidadores !== undefined) {
             this.kpis.totalVehiculos = Number(data.viajesAbiertos.totalValidadores) || 0;
           }
+        }
+        // Cumplimiento de turnos y ocupación (porcentaje null = sin datos → "—")
+        if (data && data.cumplimientoTurnos) {
+          const c = data.cumplimientoTurnos;
+          this.kpis.turnosInicio = Number(c.totalTurnos) || 0;
+          this.kpis.turnosFin = Number(c.turnosCerrados) || 0;
+          this.kpis.cumplimientoTurnos = c.porcentaje == null ? null : Number(c.porcentaje) / 100;
+        }
+        if (data && data.ocupacion) {
+          this.kpis.ocupacion = data.ocupacion.porcentaje == null ? null : Number(data.ocupacion.porcentaje) / 100;
         }
         // Actualizar Top 5 rutas
         if (data && data.top5Rutas && Array.isArray(data.top5Rutas)) {

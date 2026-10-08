@@ -611,7 +611,7 @@ export class NetpayDialogComponent implements OnInit, OnDestroy {
       try {
         // Configurar Netpay
         NetPay.setApiKey(environment.NETPAY_PUBLIC_KEY);
-        NetPay.setSandboxMode(true);
+        NetPay.setSandboxMode(environment.NETPAY_SANDBOX);
 
         // Generar device fingerprint
         this.deviceFingerPrint = NetPay.form.generateDeviceFingerPrint();

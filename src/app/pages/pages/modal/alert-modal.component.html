@@ -29,7 +29,10 @@
       </div>
 
       <h3 id="am-title" class="am-title">{{ state?.title }}</h3>
-      <p id="am-msg" class="am-msg">{{ state?.message }}</p>
+      <!-- [innerHTML] lo sanea Angular (quita scripts, eventos y style): los
+           mensajes con <strong>/<br>/<div> se ven formateados sin abrir XSS.
+           Con {{ }} se mostraban las etiquetas como texto. -->
+      <div id="am-msg" class="am-msg" [innerHTML]="state?.message"></div>
 
       <div *ngIf="state?.inputEnabled" class="am-field">
         <label class="am-field__label">{{ state?.inputLabel }}</label>
