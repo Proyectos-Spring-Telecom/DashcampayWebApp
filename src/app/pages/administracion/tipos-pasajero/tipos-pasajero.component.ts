@@ -1,3 +1,4 @@
+import { mensajeDeError } from 'src/app/core/utils/mensaje-error';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UntypedFormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -134,7 +135,7 @@ export class TiposPasajeroComponent implements OnInit {
         this.alerts.open({
           type: 'error',
           title: '¡Ops!',
-          message: String(error),
+          message: mensajeDeError(error),
           confirmText: 'Confirmar',
           backdropClose: false
         });
@@ -171,7 +172,7 @@ export class TiposPasajeroComponent implements OnInit {
         this.alerts.open({
           type: 'error',
           title: '¡Ops!',
-          message: String(error),
+          message: mensajeDeError(error),
           confirmText: 'Confirmar',
           backdropClose: false
         });

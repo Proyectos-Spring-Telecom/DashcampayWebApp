@@ -5,7 +5,7 @@ import { fadeInRight400ms } from '@vex/animations/fade-in-right.animation';
 import { AlertsService } from 'src/app/pages/pages/modal/alerts.service';
 import { RutasService } from 'src/app/pages/services/ruta.service';
 import { ZonasService } from 'src/app/pages/services/zonas.service';
-import { googleMapsScriptUrl } from 'src/app/core/security/load-google-maps';
+import { loadGoogleMaps as cargarGoogleMaps } from 'src/app/core/security/load-google-maps';
 
 declare const google: any;
 
@@ -111,54 +111,9 @@ export class AgregarRutaComponent implements OnInit, OnDestroy {
   }
 
   private loadGoogleMaps(): Promise<void> {
-    return new Promise((resolve, reject) => {
-      const finish = async () => {
-        try {
-          if (typeof google !== 'undefined' && google.maps?.importLibrary) {
-            await google.maps.importLibrary('geometry');
-          }
-        } catch (e) {
-          console.warn('[AgregarRuta] Librería geometry de Maps:');
-        }
-        resolve();
-      };
 
-      if (typeof google !== 'undefined' && google.maps?.geometry?.poly?.containsLocation) {
-        resolve();
-        return;
-      }
+    return cargarGoogleMaps();
 
-      if (typeof google !== 'undefined' && google.maps?.Map) {
-        void finish();
-        return;
-      }
-
-      const existing = document.getElementById('gmaps-sdk') as HTMLScriptElement | null;
-      if (existing) {
-        const onLoad = () => void finish();
-        if ((window as any).google?.maps?.Map) {
-          void finish();
-        } else {
-          existing.addEventListener('load', onLoad, { once: true });
-        }
-        existing.addEventListener('error', (e) => reject(e));
-        return;
-      }
-
-      const script = document.createElement('script');
-      script.id = 'gmaps-sdk';
-      script.async = true;
-      script.defer = true;
-      const src = googleMapsScriptUrl('places,geometry');
-      if (!src) {
-        reject(new Error('No se pudo cargar Google Maps'));
-        return;
-      }
-      script.src = src;
-      script.onload = () => void finish();
-      script.onerror = (e) => reject(e);
-      document.head.appendChild(script);
-    });
   }
 
   private initMap(): void {

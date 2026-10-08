@@ -13,7 +13,7 @@
             <span class="sep">/</span>
             <span class="crumb-current" aria-current="page">Pasajeros</span>
             <span class="sep">/</span>
-            <span class="crumb-current" aria-current="page">Agregar Pasajero</span>
+            <span class="crumb-current" aria-current="page">{{ title }}</span>
           </nav>
         </div>
 
@@ -128,7 +128,7 @@
                 </mat-form-field>
               </div>
 
-              <div class="fm-group">
+              <div class="fm-group" *ngIf="!idPasajero">
                 <label id="lbl-password">
                   <i class="fa fa-lock doc-icon" aria-hidden="true"></i>
                   Contraseña

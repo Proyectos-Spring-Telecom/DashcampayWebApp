@@ -1,3 +1,4 @@
+import { mensajeDeError } from 'src/app/core/utils/mensaje-error';
 import { Component, OnInit, ViewChild, AfterViewInit, OnDestroy } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -7,7 +8,7 @@ import CustomStore from 'devextreme/data/custom_store';
 import { lastValueFrom } from 'rxjs';
 import { AlertsService } from 'src/app/pages/pages/modal/alerts.service';
 import { ZonasService } from 'src/app/pages/services/zonas.service';
-import { googleMapsScriptUrl } from 'src/app/core/security/load-google-maps';
+import { loadGoogleMaps as cargarGoogleMaps } from 'src/app/core/security/load-google-maps';
 
 declare const google: any;
 
@@ -106,7 +107,7 @@ export class ListaZonasComponent implements OnInit, AfterViewInit, OnDestroy {
         this.alerts.open({
           type: 'error',
           title: '¡Ops!',
-          message: String(error),
+          message: mensajeDeError(error),
           confirmText: 'Confirmar',
           backdropClose: false,
         });
@@ -143,7 +144,7 @@ export class ListaZonasComponent implements OnInit, AfterViewInit, OnDestroy {
         this.alerts.open({
           type: 'error',
           title: '¡Ops!',
-          message: String(error),
+          message: mensajeDeError(error),
           confirmText: 'Confirmar',
           backdropClose: false,
         });
@@ -452,40 +453,9 @@ export class ListaZonasComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private loadGoogleMaps(): Promise<void> {
-    if ((window as any).google?.maps?.Map) {
-      return Promise.resolve();
-    }
 
-    const existing = Array.from(document.getElementsByTagName('script')).find((s) =>
-      s.src.includes('maps.googleapis.com/maps/api/js')
-    ) as HTMLScriptElement | undefined;
+    return cargarGoogleMaps();
 
-    if (existing) {
-      if ((window as any).google?.maps) {
-        return Promise.resolve();
-      }
-      return new Promise<void>((resolve, reject) => {
-        existing.addEventListener('load', () => resolve());
-        existing.addEventListener('error', () =>
-          reject(new Error('No se pudo cargar Google Maps'))
-        );
-      });
-    }
-
-    return new Promise<void>((resolve, reject) => {
-      const script = document.createElement('script');
-      const src = googleMapsScriptUrl('marker');
-      if (!src) {
-        reject(new Error('No se pudo cargar Google Maps'));
-        return;
-      }
-      script.src = src;
-      script.async = true;
-      script.defer = true;
-      script.onload = () => resolve();
-      script.onerror = () => reject(new Error('No se pudo cargar Google Maps'));
-      document.head.appendChild(script);
-    });
   }
 
 }

@@ -5,7 +5,7 @@ import { AlertsService } from 'src/app/pages/pages/modal/alerts.service';
 import { DispositivosService } from 'src/app/pages/services/dispositivos.service';
 import { MonederosServices } from 'src/app/pages/services/monederos.service';
 import { TransaccionesService } from 'src/app/pages/services/transacciones.service';
-import { googleMapsScriptUrl } from 'src/app/core/security/load-google-maps';
+import { loadGoogleMaps as cargarGoogleMaps } from 'src/app/core/security/load-google-maps';
 
 @Component({
   selector: 'vex-agregar-transaccion',
@@ -220,29 +220,9 @@ export class AgregarTransaccionComponent implements OnInit {
   }
 
   private loadGoogleMaps(_apiKey: string): Promise<void> {
-    const w = window as any;
-    if (w.google && w.google.maps) return Promise.resolve();
 
-    return new Promise((resolve, reject) => {
-      const scriptId = 'gmaps-sdk';
-      if (document.getElementById(scriptId)) {
-        (document.getElementById(scriptId) as HTMLScriptElement).addEventListener('load', () => resolve());
-        return;
-      }
-      const script = document.createElement('script');
-      script.id = scriptId;
-      const src = googleMapsScriptUrl('marker');
-      if (!src) {
-        reject(new Error('No se pudo cargar Google Maps'));
-        return;
-      }
-      script.src = src;
-      script.async = true;
-      script.defer = true;
-      script.onload = () => resolve();
-      script.onerror = () => reject(new Error('No se pudo cargar Google Maps'));
-      document.head.appendChild(script);
-    });
+    return cargarGoogleMaps();
+
   }
 
   async agregar() {

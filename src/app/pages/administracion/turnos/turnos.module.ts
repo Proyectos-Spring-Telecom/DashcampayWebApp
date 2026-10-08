@@ -24,15 +24,13 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { DxDataGridModule, DxDateBoxModule } from 'devextreme-angular';
-import { AgregarTurnoComponent } from './agregar-turno/agregar-turno.component';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { HasPermissionDirective } from '../../services/haspermission.directive';
 
 
 @NgModule({
   declarations: [
-    ListaTurnosComponent,
-    AgregarTurnoComponent
+    ListaTurnosComponent
 ],
   imports: [
     CommonModule,

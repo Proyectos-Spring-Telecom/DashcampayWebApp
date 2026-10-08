@@ -79,15 +79,15 @@
         <div class="col-12 col-sm-6 col-lg-3">
           <div class="kpi-card kpi-slim shadow-sm">
             <div class="kpi-top"><span>Cumplimiento de turnos</span><i class="material-icons">done_all</i></div>
-            <div class="kpi-value">{{ kpis.cumplimientoTurnos | percent:'1.0-1' }}</div>
-            <div class="kpi-foot">{{ kpis.turnosFin }}/{{ kpis.turnosInicio }} turnos</div>
+            <div class="kpi-value">{{ kpis.cumplimientoTurnos == null ? '—' : (kpis.cumplimientoTurnos | percent:'1.0-1') }}</div>
+            <div class="kpi-foot">{{ kpis.cumplimientoTurnos == null ? 'Sin datos' : kpis.turnosFin + '/' + kpis.turnosInicio + ' turnos' }}</div>
           </div>
         </div>
         <div class="col-12 col-sm-6 col-lg-3">
           <div class="kpi-card kpi-slim shadow-sm">
             <div class="kpi-top"><span>Ocupación promedio</span><i class="material-icons">event_seat</i></div>
-            <div class="kpi-value">{{ kpis.ocupacion | percent:'1.0-1' }}</div>
-            <div class="kpi-foot">Proxy por conteo</div>
+            <div class="kpi-value">{{ kpis.ocupacion == null ? '—' : (kpis.ocupacion | percent:'1.0-1') }}</div>
+            <div class="kpi-foot">{{ kpis.ocupacion == null ? 'Sin datos del contador' : 'Abordajes por viaje / capacidad' }}</div>
           </div>
         </div>
 

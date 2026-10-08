@@ -1,6 +1,6 @@
+import { mensajeDeError } from 'src/app/core/utils/mensaje-error';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { UntypedFormControl } from '@angular/forms';
-import { Router } from '@angular/router';
 import { fadeInRight400ms } from '@vex/animations/fade-in-right.animation';
 import { DxDataGridComponent } from 'devextreme-angular';
 import CustomStore from 'devextreme/data/custom_store';
@@ -41,7 +41,6 @@ export class ListaTurnosComponent implements OnInit {
   isGrouped: boolean = false;
 
   constructor(
-    private router: Router,
     private turnService: TurnoService,
     private alerts: AlertsService,
   ) {
@@ -57,14 +56,6 @@ export class ListaTurnosComponent implements OnInit {
   // hasPermission(permission: string): boolean {
   //   return this.permissionsService.getPermission(permission) !== undefined;
   // }
-
-  agregarTurno() {
-    this.router.navigateByUrl('/administracion/turnos/agregar-turno');
-  }
-
-  actualizarTurno(idTurno: number) {
-    this.router.navigateByUrl('/administracion/turnos/editar-turno/' + idTurno);
-  }
 
   async activar(rowData: any) {
     const res = await this.alerts.open({
@@ -94,7 +85,7 @@ export class ListaTurnosComponent implements OnInit {
         this.alerts.open({
           type: 'error',
           title: '¡Ops!',
-          message: String(error),
+          message: mensajeDeError(error),
           confirmText: 'Confirmar',
           backdropClose: false,
         });
@@ -130,7 +121,7 @@ export class ListaTurnosComponent implements OnInit {
         this.alerts.open({
           type: 'error',
           title: '¡Ops!',
-          message: String(error),
+          message: mensajeDeError(error),
           confirmText: 'Confirmar',
           backdropClose: false,
         });

@@ -50,6 +50,10 @@ export class AgregarPasajeroComponent implements OnInit {
           this.obtenerPasajeroID();
           this.showCorreo = false;
           this.pasajeroForm.get('correo')?.disable();
+          // PUT /pasajeros/:id no acepta estos campos (lista blanca estricta):
+          // la contraseña la cambia el pasajero, y monedero/tipo van por monederos.
+          ['passwordHash', 'numeroSerieMonedero', 'idTipoPasajero', 'documentacion']
+            .forEach((c) => this.pasajeroForm.get(c)?.disable());
         }
       }
     )
@@ -87,7 +91,8 @@ export class AgregarPasajeroComponent implements OnInit {
           fechaNacimiento: fecha,
           curp: response.data.curp || '',
           numeroSerieMonedero: response.data.numeroSerieMonedero || '',
-          idTipoPasajero: response.data.idTipoPasajero || null,
+          // bigint llega como string; el catálogo usa ids numéricos.
+          idTipoPasajero: response.data.idTipoPasajero ? Number(response.data.idTipoPasajero) : null,
         });
         // Nota: passwordHash y documentacion no se cargan por seguridad
       }

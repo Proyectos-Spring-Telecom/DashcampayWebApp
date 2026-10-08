@@ -63,71 +63,6 @@ export const appRoutes: VexRoutes = [
           ).then((m) => m.DashboardAnalyticsComponent)
       },
       {
-        path: 'apps',
-        children: [
-          {
-            path: 'chat',
-            loadChildren: () => import('./pages/apps/chat/chat.routes')
-          },
-          {
-            path: 'mail',
-            loadChildren: () => import('./pages/apps/mail/mail.routes'),
-            data: {
-              toolbarShadowEnabled: true,
-              scrollDisabled: true
-            }
-          },
-          {
-            path: 'social',
-            loadChildren: () => import('./pages/apps/social/social.routes')
-          },
-          {
-            path: 'contacts',
-            loadChildren: () => import('./pages/apps/contacts/contacts.routes')
-          },
-          {
-            path: 'calendar',
-            loadComponent: () =>
-              import('./pages/apps/calendar/calendar.component').then(
-                (m) => m.CalendarComponent
-              ),
-            data: {
-              toolbarShadowEnabled: true
-            }
-          },
-          {
-            path: 'aio-table',
-            loadComponent: () =>
-              import('./pages/apps/aio-table/aio-table.component').then(
-                (m) => m.AioTableComponent
-              ),
-            data: {
-              toolbarShadowEnabled: false
-            }
-          },
-          {
-            path: 'help-center',
-            loadChildren: () =>
-              import('./pages/apps/help-center/help-center.routes')
-          },
-          {
-            path: 'scrumboard',
-            loadChildren: () =>
-              import('./pages/apps/scrumboard/scrumboard.routes')
-          },
-          {
-            path: 'editor',
-            loadComponent: () =>
-              import('./pages/apps/editor/editor.component').then(
-                (m) => m.EditorComponent
-              ),
-            data: {
-              scrollDisabled: true
-            }
-          }
-        ]
-      },
-      {
         path: 'administracion',
         children: [
           {
@@ -307,34 +242,6 @@ export const appRoutes: VexRoutes = [
         path: 'pages',
         children: [
           {
-            path: 'pricing',
-            loadComponent: () =>
-              import('./pages/pages/pricing/pricing.component').then(
-                (m) => m.PricingComponent
-              )
-          },
-          {
-            path: 'faq',
-            loadComponent: () =>
-              import('./pages/pages/faq/faq.component').then(
-                (m) => m.FaqComponent
-              )
-          },
-          {
-            path: 'guides',
-            loadComponent: () =>
-              import('./pages/pages/guides/guides.component').then(
-                (m) => m.GuidesComponent
-              )
-          },
-          {
-            path: 'invoice',
-            loadComponent: () =>
-              import('./pages/pages/invoice/invoice.component').then(
-                (m) => m.InvoiceComponent
-              )
-          },
-          {
             path: 'error-404',
             loadComponent: () =>
               import('./pages/pages/errors/error-404/error-404.component').then(
@@ -349,43 +256,6 @@ export const appRoutes: VexRoutes = [
               )
           }
         ]
-      },
-      {
-        path: 'ui',
-        children: [
-          {
-            path: 'components',
-            loadChildren: () =>
-              import('./pages/ui/components/components.routes')
-          },
-          {
-            path: 'forms/form-elements',
-            loadComponent: () =>
-              import(
-                './pages/ui/forms/form-elements/form-elements.component'
-              ).then((m) => m.FormElementsComponent)
-          },
-          {
-            path: 'forms/form-wizard',
-            loadComponent: () =>
-              import('./pages/ui/forms/form-wizard/form-wizard.component').then(
-                (m) => m.FormWizardComponent
-              )
-          },
-          {
-            path: 'icons',
-            loadChildren: () => import('./pages/ui/icons/icons.routes')
-          },
-          {
-            path: 'page-layouts',
-            loadChildren: () =>
-              import('./pages/ui/page-layouts/page-layouts.routes')
-          }
-        ]
-      },
-      {
-        path: 'documentation',
-        loadChildren: () => import('./pages/documentation/documentation.routes')
       },
       {
         path: '**',

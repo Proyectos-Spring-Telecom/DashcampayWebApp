@@ -1,16 +1,17 @@
-// This file can be replaced during build by using the `fileReplacements` array.
-// `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
-// The list of file replacements can be found in `angular.json`.
+// Entorno de desarrollo. `ng build --configuration production` lo reemplaza por
+// environment.prod.ts (fileReplacements en angular.json). V2-19: antes no había
+// reemplazo y este archivo, que apuntaba a la API de producción, se usaba siempre.
 
 export const environment = {
   production: false,
   stripe_token: 'STRIPE_TOKEN',
   paypal_token: 'PAYPAL_TOKEN',
-  // API_SECURITY: '',
-  //API_SECURITY: 'https://dashcampay.com/apidev',
-  API_SECURITY:'https://dashcampay.com/api',
+  API_SECURITY: 'https://dashcampay.com/apidev',
   //API_SECURITY:'http://localhost:3000',
   NETPAY_PUBLIC_KEY: 'pk_netpay_YbahDkYgsFmUhIFYNzijoIqDJ',
+  // Debe coincidir con NETPAY_ENVIRONMENT de la API a la que apunta.
+  NETPAY_SANDBOX: true,
+  defaultauth: 'fackbackend',
 };
 
 /*

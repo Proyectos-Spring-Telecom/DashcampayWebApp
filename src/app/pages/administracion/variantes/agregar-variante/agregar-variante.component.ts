@@ -1,3 +1,5 @@
+import { mensajeDeError } from 'src/app/core/utils/mensaje-error';
+import { loadGoogleMaps } from 'src/app/core/security/load-google-maps';
 import { Component, OnInit, OnDestroy, AfterViewInit } from '@angular/core';
 import { AbstractControl, FormBuilder, FormGroup, UntypedFormControl, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -111,14 +113,18 @@ export class AgregarVarianteComponent implements OnInit, AfterViewInit, OnDestro
   };
 
   // Punto circular para el trazado
-  private readonly circlePoint: google.maps.Symbol = {
-    path: google.maps.SymbolPath.CIRCLE,
-    fillColor: '#000000',
-    fillOpacity: 1,
-    strokeColor: '#000000',
-    strokeWeight: 1,
-    scale: 5,
-  };
+  // Getter: el componente se construye antes de que cargue Maps y
+  // google.maps.SymbolPath en un campo tiraba la pantalla.
+  private get circlePoint(): google.maps.Symbol {
+    return {
+      path: google.maps.SymbolPath.CIRCLE,
+      fillColor: '#000000',
+      fillOpacity: 1,
+      strokeColor: '#000000',
+      strokeWeight: 1,
+      scale: 5,
+    };
+  }
 
   // Control de flujo del trazado
   isRouteFinalized = false;
@@ -449,15 +455,7 @@ export class AgregarVarianteComponent implements OnInit, AfterViewInit, OnDestro
   // Google Maps helpers
   // ==========================
   private ensureGoogleLoaded(): Promise<void> {
-    return new Promise((resolve) => {
-      if ((window as any).google?.maps) return resolve();
-      const id = setInterval(() => {
-        if ((window as any).google?.maps) {
-          clearInterval(id);
-          resolve();
-        }
-      }, 50);
-    });
+    return loadGoogleMaps();
   }
 
   private setDrawingEnabled(on: boolean): void {
@@ -911,7 +909,7 @@ async agregarVariante(): Promise<void> {
     this.alerts.open({
       type: 'error',
       title: '¡Ops!',
-      message: String(error) || 'Ocurrió un error al guardar la variante. Inténtalo de nuevo.',
+      message: mensajeDeError(error) || 'Ocurrió un error al guardar la variante. Inténtalo de nuevo.',
       confirmText: 'Confirmar',
       backdropClose: false,
     });

@@ -17,7 +17,6 @@ import { provideLuxon } from './core/luxon/luxon.provider';
 import { provideVex } from '@vex/vex.provider';
 import { provideNavigation } from './core/navigation/navigation.provider';
 import { vexConfigs } from '@vex/config/vex-configs';
-import { provideQuillConfig } from 'ngx-quill';
 import { interceptServiceInterceptor } from './pages/pages/auth/login/intercept.service';
 import { authRefreshInterceptor } from './core/interceptors/auth-refresh.interceptor';
 import { initializeAuthSession } from './core/services/auth-session.initializer';
@@ -62,18 +61,6 @@ export const appConfig: ApplicationConfig = {
     }),
     provideNavigation(),
     provideIcons(),
-    provideLuxon(),
-    provideQuillConfig({
-      modules: {
-        toolbar: [
-          ['bold', 'italic', 'underline', 'strike'],
-          ['blockquote', 'code-block'],
-          [{ list: 'ordered' }, { list: 'bullet' }],
-          [{ header: [1, 2, 3, 4, 5, 6, false] }],
-          ['clean'],
-          ['link', 'image']
-        ]
-      }
-    })
+    provideLuxon()
   ]
 };

@@ -1,3 +1,4 @@
+import { mensajeDeError } from 'src/app/core/utils/mensaje-error';
 import { Component, OnInit, AfterViewInit, OnDestroy } from '@angular/core';
 import { FormBuilder, FormGroup, UntypedFormControl, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -6,7 +7,7 @@ import { AuthenticationService } from 'src/app/core/services/auth.service';
 import { AlertsService } from 'src/app/pages/pages/modal/alerts.service';
 import { ClientesService } from 'src/app/pages/services/clientes.service';
 import { ZonasService } from 'src/app/pages/services/zonas.service';
-import { googleMapsScriptUrl } from 'src/app/core/security/load-google-maps';
+import { loadGoogleMaps as cargarGoogleMaps } from 'src/app/core/security/load-google-maps';
 import {
   bloquearCaracteresEspecialesNombre,
   NOMBRE_SIN_ESPECIALES_REGEX,
@@ -328,7 +329,7 @@ export class AgregarZonaComponent implements OnInit, AfterViewInit, OnDestroy {
         this.alerts.open({
           type: 'error',
           title: '¡Ops!',
-          message: String(error),
+          message: mensajeDeError(error),
           confirmText: 'Confirmar',
           backdropClose: false,
         });
@@ -488,51 +489,15 @@ export class AgregarZonaComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   private loadGoogleMaps(): Promise<void> {
-    if ((window as any).google?.maps?.Map) {
-      return Promise.resolve();
-    }
 
-    const existing =
-      document.querySelector<HTMLScriptElement>('script[data-gmaps="js"]') ||
-      (Array.from(document.getElementsByTagName('script')).find((s) =>
-        s.src.includes('maps.googleapis.com/maps/api/js')
-      ) as HTMLScriptElement | undefined);
+    return cargarGoogleMaps();
 
-    if (existing) {
-      if ((window as any).google?.maps?.Map) {
-        return Promise.resolve();
-      }
-      return new Promise<void>((resolve, reject) => {
-        existing.addEventListener('load', () => resolve());
-        existing.addEventListener('error', () =>
-          reject(new Error('No se pudo cargar Google Maps'))
-        );
-      });
-    }
-
-    if (!AgregarZonaComponent.mapsLoading) {
-      AgregarZonaComponent.mapsLoading = this.loadGoogleMapsScript();
-    }
-    return AgregarZonaComponent.mapsLoading;
   }
 
   private loadGoogleMapsScript(): Promise<void> {
-    return new Promise<void>((resolve, reject) => {
-      const script = document.createElement('script');
-      script.setAttribute('data-gmaps', 'js');
-      const src = googleMapsScriptUrl('marker');
-      if (!src) {
-        reject(new Error('No se pudo cargar Google Maps'));
-        return;
-      }
-      script.src = src;
-      script.async = true;
-      script.defer = true;
-      script.onload = () => resolve();
-      script.onerror = () =>
-        reject(new Error('No se pudo cargar Google Maps'));
-      document.head.appendChild(script);
-    });
+
+    return cargarGoogleMaps();
+
   }
 
   private getMapElement(): HTMLElement | null {
