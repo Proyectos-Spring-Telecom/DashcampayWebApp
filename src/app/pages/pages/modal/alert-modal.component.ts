@@ -1,5 +1,6 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, HostListener, SecurityContext } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DomSanitizer } from '@angular/platform-browser';
 import { Router } from '@angular/router';
 import { AlertsService, AlertResult, AlertState, AlertType } from './alerts.service';
 
@@ -33,7 +34,18 @@ export class AlertModalComponent {
     return this.iconPath[t];
   }
 
-  constructor(private alerts: AlertsService, private router: Router, private cdr: ChangeDetectorRef) {
+  /**
+   * H-69: el mensaje puede traer datos del backend/usuario (nombres, placas,
+   * texto de error) interpolados con <strong>/<br>/<div>. Se sanea de forma
+   * explícita con DomSanitizer (SecurityContext.HTML): conserva ese formato
+   * básico y elimina <script>, atributos on* y demás vectores XSS antes de
+   * pasarlo a [innerHTML]. Devuelve '' si queda nulo para no romper el render.
+   */
+  get safeMessage(): string {
+    return this.sanitizer.sanitize(SecurityContext.HTML, this.state?.message ?? '') ?? '';
+  }
+
+  constructor(private alerts: AlertsService, private router: Router, private cdr: ChangeDetectorRef, private sanitizer: DomSanitizer) {
     this.alerts.state$.subscribe(s => {
       if (!s) return;
       this.state = s;

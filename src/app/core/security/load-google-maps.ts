@@ -1,14 +1,16 @@
+import { environment } from '../../../environments/environment';
+
 const LIBRARIES = new Set(['marker', 'places', 'geometry']);
 
 /**
- * La key solo vive en este módulo (pantallas de mapa), no en index.html.
+ * La key ya no vive hardcodeada aquí (H-43): se lee de environment
+ * (googleMapsApiKey). El valor se reemplaza en build con environment.prod.ts.
  * En Google Cloud debe quedar restringida por referrer: el navegador siempre la ve.
  */
-const GOOGLE_MAPS_API_KEY = 'AIzaSyDOlZGwePQfNGK5JPaRZjjIyj5OhCBezaE';
 
 /** Arma la URL del script. Null si no hay key. */
 export function googleMapsScriptUrl(libraries: string): string | null {
-  const key = GOOGLE_MAPS_API_KEY.trim();
+  const key = (environment.googleMapsApiKey ?? '').trim();
   if (!key) return null;
   const libs = libraries
     .split(',')

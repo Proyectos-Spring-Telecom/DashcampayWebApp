@@ -7,4 +7,6 @@ export const environment = {
   NETPAY_PUBLIC_KEY: 'pk_netpay_YbahDkYgsFmUhIFYNzijoIqDJ',
   NETPAY_SANDBOX: true,
   defaultauth: 'fackbackend',
+  // H-43: requerido por load-google-maps (si falta, el mapa no carga en --configuration local).
+  googleMapsApiKey: 'AIzaSyDOlZGwePQfNGK5JPaRZjjIyj5OhCBezaE',
 };

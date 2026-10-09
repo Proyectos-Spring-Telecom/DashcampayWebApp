@@ -3,6 +3,39 @@
 
 <head>
   <meta charset="utf-8" />
+  <!--
+    H-69: Content-Security-Policy razonable (defensa en profundidad; el saneo
+    principal lo hace Angular/DomSanitizer). Se permiten solo los dominios que ya
+    usa la app:
+      - cdn.jsdelivr.net  -> Bootstrap (css/js)
+      - unpkg.com         -> Leaflet (css/js)
+      - cdnjs.cloudflare.com -> Font Awesome
+      - fonts.googleapis.com / fonts.gstatic.com -> Material Icons / fuentes
+      - maps.googleapis.com + *.gstatic.com + *.google.com -> Google Maps (JS/tiles)
+      - *.tile.openstreetmap.org -> tiles de Leaflet
+      - docs.netpay.mx / *.netpay.mx -> SDK y flujo de pago NetPay
+      - dashcampay.com (+ wss) -> API y WebSocket de monitoreo
+    script-src NO incluye 'unsafe-inline' (bloquea <script> y on* inyectados, el
+    vector XSS real); sí 'unsafe-eval' porque lo requieren ng serve (dev) y algunas
+    libs. style-src requiere 'unsafe-inline' (estilos de Angular/Maps/splash).
+    Nota: frame-ancestors/HSTS deben fijarse además como cabecera HTTP en el server
+    (una meta no los aplica). Si NetPay usa un dominio antifraude no listado, se
+    verá bloqueado en connect/frame-src: agregarlo aquí cuando se detecte.
+  -->
+  <meta http-equiv="Content-Security-Policy" content="
+    default-src 'self';
+    script-src 'self' 'unsafe-eval' https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://maps.googleapis.com https://docs.netpay.mx https://*.netpay.mx;
+    style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net https://unpkg.com https://cdnjs.cloudflare.com https://fonts.googleapis.com;
+    font-src 'self' data: https://fonts.gstatic.com https://cdnjs.cloudflare.com;
+    img-src 'self' data: blob: https://*.googleapis.com https://*.gstatic.com https://*.google.com https://unpkg.com https://*.tile.openstreetmap.org https://*.netpay.mx;
+    connect-src 'self' https://dashcampay.com wss://dashcampay.com https://maps.googleapis.com https://docs.netpay.mx https://*.netpay.mx;
+    frame-src 'self' https://docs.netpay.mx https://*.netpay.mx;
+    worker-src 'self' blob:;
+    child-src 'self' blob:;
+    object-src 'none';
+    base-uri 'self';
+    form-action 'self';
+  " />
   <title>DashCam PAY | Administración</title>
   <base href="/" />
 

@@ -12,6 +12,9 @@ export const environment = {
   // Debe coincidir con NETPAY_ENVIRONMENT de la API a la que apunta.
   NETPAY_SANDBOX: true,
   defaultauth: 'fackbackend',
+  // H-43: la key de Google Maps se centraliza aquí (sigue siendo visible en el
+  // navegador por diseño). Restríngela por referrer en Google Cloud y ROTA esta key.
+  googleMapsApiKey: 'AIzaSyDOlZGwePQfNGK5JPaRZjjIyj5OhCBezaE',
 };
 
 /*
